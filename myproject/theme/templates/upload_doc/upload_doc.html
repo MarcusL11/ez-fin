@@ -1,0 +1,67 @@
+{% extends "../dashboard/dashboard_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block main %}
+<section class="my-10 flex-col items-center min-h-screen">
+  <header class="text-center">
+      <div class="flex justify-center items-center">
+          <img src="{% static 'svg/scb_logo.svg' %}" alt="SCB logo" class="h-24 w-auto mx-auto">
+      </div>
+      <h1>Upload Document</h1>
+    <p class="text-xs">(Only PDF, JPEGS, and PNG)</p>
+      <a href="" class="link text-xs">Example Documents</a>
+  </header>
+  <div class="card border-2 p-10 my-10 text-center">
+    <form 
+      action="" 
+      method="post" 
+      enctype="multipart/form-data"
+      hx-post="{% url 'upload_doc' %}"
+      hx-target="#step1-result"
+      hx-swap="innerHTML"
+      hx-trigger="submit"
+      hx-on::after-request="this.reset();"
+      _="
+      on submit 
+       add .hidden to #submit-button then 
+        remove .hidden from #loading-button then 
+        wait for swap inside #step1-result then
+        remove .hidden from #submit-button then 
+        add .hidden to #loading-button
+      end
+      ">
+      {{ form.non_field_errors }}
+      <div class="form-group">
+        {% for field in form %}
+        <div class="flex flex-col space-y-4">
+          {{ field.label_tag }}
+          {{ field|add_class:"p-2 border border-primary rounded focus:outline-none focus:ring focus:border-secondary" }}
+          {% if field.errors %}
+          <div class="text-error text-sm">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="my-10">
+        <button 
+          class="btn" 
+          type="submit" 
+          <span id="submit-button">Submit</span>
+          <span id="loading-button" class="hidden loading loading-dots loading-sm"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div 
+    class="my-10" 
+    id="step1-result">
+    <!-- Response will be rendered here -->
+  </div>
+
+  <div class="my-10" id="step2-result">
+    <!-- Response will be rendered here -->
+  </div>
+</section>
+{% endblock main %}
+

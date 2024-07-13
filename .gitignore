@@ -1,0 +1,4 @@
+# venv directories
+.env
+venv
+node_modules
