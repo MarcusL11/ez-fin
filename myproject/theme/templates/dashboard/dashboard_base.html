@@ -18,12 +18,15 @@
 
    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="flex min-h-screen">
+      <!-- -- Sidebar -- -->
       {% include "dashboard/partials/_sidebar.html" %}
+      
       <main class="flex-1 p-8 overflow-y-auto">
         {% block main %}
           <a href="{% url 'upload_doc' %}">Upload Document</a>
         {% endblock main%}
       </main>
+
     </div>
   </body>
 </html>
