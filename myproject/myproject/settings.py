@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django_htmx",
     "django_components",
     "widget_tweaks",
+    "django.contrib.humanize",
     # apps
     "accounts",
     "dashboard",

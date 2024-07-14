@@ -1,0 +1,301 @@
+{% load humanize %}
+{% load static %}
+<div class="my-10 flex-col min-h-screen">
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs text-sm">
+    <ul>
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'my_docs' %}">My Docs</a></li>
+      <li>{{ document.name }}</li>
+    </ul>
+  </div>
+
+  {% if doc_type == "Credit Card" %}
+  <div class="mt-2 p-4"">
+    <section class="flex-col">
+      <header class="my-2">
+        <h1 class="text-2xl font-bold mb-6">Document Name: {{ document.name }}</h1>
+        <p>Bank: {{ document.bank.name }}</p>
+        <p>Document Type: {{ document.transaction_type.name }}</p>
+        <p>Card Number: {{ document.credit_card_summary.card_number }}</p>
+        <p>Date Uploaded: {{ document.date_uploaded }}</p>
+        <p>New Balance: {{ document.balance_and_payment.new_balance|intcomma }}</p>
+        <p>Minimum Payment: {{ document.balance_and_payment.minimum_payment|intcomma }}</p>
+        <p>Payment Due Date: {{ document.balance_and_payment.payment_date }}</p>
+      </header>             
+    </section>
+    <form>
+      <input 
+        type="reset"
+        value="Deselect All"
+        class="btn btn-primary"
+        _="
+        on click 
+        set .checkbox.checked to false
+        end
+        ">
+      <!-- TODO: Need to add logic to not select those that are disabled -->
+      <input 
+        type="button" 
+        class="btn btn-primary" 
+        value="Select All" 
+        _="
+        on click 
+        set .checkbox.checked to true
+        end
+        ">
+      <!-- TODO: Add URL for Save to Database -->
+      <input 
+        type="submit" 
+        class="btn btn-primary" 
+        value="Add to My Database"
+        hx-post=""
+        hx-target="#submit-message"
+        hx-swap="innerHTML"
+        hx-trigger="click"
+        hx-vals='{"document_id":"{{ document.id }}"}'/>
+      <div id="submit-message"></div>
+      <div class="overflow-x-auto">
+        <table class="my-10 table table-xs">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>
+                <div class="flex flex-col">
+                  <span>Select</span>
+                </div>
+              </th>
+              <th>Bank</th>
+              <th>Transaction Type</th>
+              <th>Transaction Date</th>
+              <th>Transaction Month</th>
+              <th>Transaction Year</th>
+              <th>Description</th>
+              <th>Debit</th>
+              <th>Credit</th>
+              <th>Category</th>
+              <th>GL Name</th>
+              <th>GL Account</th>
+              <th>GL Sub Account</th>
+              <th>Due Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for transaction in document.transaction_details.all %}
+            <tr>
+              <td>{{ forloop.counter }}</td> 
+              <td>
+                {% if transaction.saved %}
+                <input type="checkbox" class="checkbox checkbox-xs" disabled />
+                {% else%}
+                <input 
+                  type="checkbox" 
+                  class="checkbox checkbox-xs"
+                  name="transaction_ids"
+                  value="{{ transaction.id }}"
+                  _="
+                  on load 
+                  set my.checked to false
+                  end 
+                  "/>
+                {% endif %}
+              </td>
+              <td>{{ document.bank.name }}</td>
+              <td>{{ document.transaction_type.name }}</td>
+              <td>{{ transaction.transaction_date }}</td>
+              <td>{{ transaction.transaction_date|date:"m" }}</td>
+              <td>{{ transaction.transaction_date|date:"Y" }}</td>
+              <td>{{ transaction.description }}</td>
+              <td>
+                {% if transaction.amount < 0 %}
+                  {{ transaction.amount|intcomma }}
+                  {% else %}
+                    0
+                  {% endif %}
+              </td>
+              <td>
+                {% if transaction.amount > 0 %}
+                  {{ transaction.amount|intcomma }}
+                {% else %}
+                  0
+                {% endif %}
+              </td>
+              {% if transaction.expense_category.name %}
+                <td>{{ transaction.expense_category.name }}</td>
+              {% else %}
+                <td>
+                  <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+                </td>
+              {% endif %}
+              <td>{{ transaction.account_category.name}}</td> <!-- TODO: GL Name Model-->
+              {% if transaction.get_parent_gl_account is not None %}
+              <td>{{ transaction.get_parent_gl_account.name }}</td> <!-- TODO: GL Account-->
+              {% else %}
+              <td>{{ transaction.gl_account.name }}</td> <!-- TODO: GL Account-->
+              {% endif %}
+
+              {% if transaction.get_parent_child_gl_account %}
+              <td>{{ transaction.get_parent_child_gl_account.name }}</td> <!-- TODO: GL Sub Account-->
+              {% else %}
+              <td>{{ transaction.gl_account.name }}</td> <!-- TODO: GL Sub Account-->
+              {% endif %}
+
+              <td>{{ document.balance_and_payment.payment_date }}</td>
+              <td>
+                {% if transaction.saved %}
+                <span class="text-success">Saved</span>
+                {% else %}
+                <span class="text-error">Not Saved</span>
+              </td>
+              {% endif %}
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+  {% else %}
+  <div class="mt-2 p-4"">
+    <section class="flex-col">
+      <header class="my-2">
+        <h1 class="text-3xl font-bold mb-6">{{ document.name }}</h1>
+        <p>Bank: {{ document.bank.name }}</p>
+        <p>Document Type: {{ document.transaction_type.name }}</p>
+        <p>Date Uploaded: {{ document.date_uploaded }}</p>
+      </header>             
+    </section>
+    <form>
+      <input 
+        type="reset"
+        value="Deselect All"
+        class="btn btn-primary"
+        _="
+        on click 
+        set .checkbox.checked to false
+        end
+        ">
+      <!-- TODO: Need to add logic to not select those that are disabled -->
+      <input 
+        type="button" 
+        class="btn btn-primary" 
+        value="Select All" 
+        _="
+        on click 
+        set .checkbox.checked to true
+        end
+        ">
+      <!-- TODO: Add URL for Save to Database -->
+      <input 
+        type="submit" 
+        class="btn btn-primary" 
+        value="Save to My Database"
+        hx-post=""
+        hx-target="#submit-message"
+        hx-swap="innerHTML"
+        hx-trigger="click"
+        hx-vals='{"document_id":"{{ document.id }}"}'/>
+      <div id="submit-message"></div>
+      <div class="overflow-x-auto">
+        <table class="my-10 table table-xs">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>
+                <div class="flex flex-col">
+                  <span>Select</span>
+                </div>
+              </th>
+              <th>Bank</th>
+              <th>Transaction Type</th>
+              <th>Transaction Date</th>
+              <th>Transaction Month</th>
+              <th>Transaction Year</th>
+              <th>Description</th>
+              <th>Debit</th>
+              <th>Credit</th>
+              <th>Category</th>
+              <th>GL Name</th>
+              <th>GL Account</th>
+              <th>GL Sub Account</th>
+              <th>Ending Balance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for transaction in document.transaction_details.all %}
+            <tr>
+              <td>{{ forloop.counter }}</td> 
+              <td>
+                {% if transaction.saved %}
+                <input type="checkbox" class="checkbox checkbox-xs" disabled />
+                {% else%}
+                <input 
+                  type="checkbox" 
+                  class="checkbox checkbox-xs"
+                  name="transaction_ids"
+                  value="{{ transaction.id }}"
+                  _="
+                  on load 
+                  set my.checked to false
+                  end 
+                  "/>
+                {% endif %}
+              </td>
+              <td>{{ document.bank.name }}</td>
+              <td>{{ document.transaction_type.name }}</td>
+              <td>{{ transaction.transaction_date }}</td>
+              <td>{{ transaction.transaction_date|date:"m" }}</td>
+              <td>{{ transaction.transaction_date|date:"Y" }}</td>
+              <td>{{ transaction.description }}</td>
+              <td>
+                {% if transaction.amount < 0 %}
+                  {{ transaction.amount|intcomma }}
+                  {% else %}
+                      0
+                  {% endif %}
+              </td>
+              <td>
+                {% if transaction.amount > 0 %}
+                  {{ transaction.amount|intcomma }}
+                {% else %}
+                  0
+                {% endif %}
+              </td>
+              {% if transaction.expense_category.name %}
+                <td>{{ transaction.expense_category.name }}</td>
+              {% else %}
+                <td>
+                  <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+                </td>
+              {% endif %}
+              <td>{{ transaction.account_category.name}}</td> <!-- TODO: GL Name Model-->
+              <td>{{ transaction.gl_account.name }}</td> <!-- TODO: GL Account-->
+              <td>{{ transaction.gl_account.name }}</td> <!-- TODO: GL Sub Account-->
+              <td>{{ transaction.ending_balance|intcomma }}</td>
+              <td>
+                {% if transaction.saved %}
+                <span class="text-success">Saved</span>
+                {% else %}
+                <span class="text-error">Not Saved</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <!--TODO: Add URL for Document Download CSV -->
+    <a href="" class="block py-2.5 px-4 rounded">         
+      <button class="btn btn-primary">Download
+        <img src="{% static 'svg/csv_icon.svg' %}" alt="">
+      </button>
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+

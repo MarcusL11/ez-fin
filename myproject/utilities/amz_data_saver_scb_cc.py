@@ -73,14 +73,16 @@ def save_transaction_details(df, document):
         )
 
         # Retrieve the parent GLAccount instance
-        parent_gl_account_instance = GLAccount.objects.get(name="Account Payable")
+        parent_gl_account_instance, _ = GLAccount.objects.get_or_create(
+            name="Account Payable"
+        )
 
         # Create the sub-account if it doesn't already exist
         sub_account_name = "SCB Credit Card Bill"
         sub_account_instance, created = GLAccount.objects.get_or_create(
             name=sub_account_name,
             defaults={
-                "account_number": "your_account_number",  # Provide a unique account number
+                "account_number": None,
                 "category": account_category_instance,
                 "description": "Description for SCB Credit Card Bill",
                 "parent_account": parent_gl_account_instance,

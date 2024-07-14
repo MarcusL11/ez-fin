@@ -3,8 +3,8 @@ from django import forms
 
 class UploadFileForm(forms.Form):
     DOC_TYPE_CHOICES = [
-        ("scb_credit_card", "Credit Card Statement"),
-        ("scb_bank_statement", "Bank Statement"),
+        ("Credit Card", "Credit Card Statement"),
+        ("Bank Statement", "Bank Statement"),
     ]
     BANK_CHOICES = [
         ("scb", "SCB"),

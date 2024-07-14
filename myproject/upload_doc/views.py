@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.conf import settings
 from pathvalidate import sanitize_filename
@@ -16,6 +16,29 @@ from utilities.amz_textract_scb_bs import (
 import time
 from .models import Document
 from django.utils import timezone
+
+
+def my_docs(request):
+    documents = Document.objects.all()
+
+    context = {"documents": documents}
+
+    return render(request, "upload_doc/my_docs.html", context)
+
+
+def my_docs_detail(request, pk=None):
+    if request.method == "GET":
+        document = get_object_or_404(Document, pk=pk)
+        doc_type = document.transaction_type.name
+        print("doc_type: " + str(doc_type))
+
+        context = {
+            "document": document,
+            "doc_type": doc_type,
+        }
+        return render(request, "upload_doc/partials/my_docs_detail.html", context)
+    else:
+        return HttpResponseForbidden("Forbidden")
 
 
 def upload_doc(request):
@@ -91,7 +114,7 @@ def upload_doc(request):
                 # https://www.youtube.com/watch?v=kzOBNLzpRLE <--- Tuturial on how to setup invoking Lambda on uploads
                 time.sleep(60)
 
-                if doc_type == "scb_credit_card":
+                if doc_type == "Credit Card":
                     # Start the get_doc_analysis_results function to get the results of the analysis
                     data_frames_dicts = get_doc_analysis_results(job_id)
 
@@ -114,13 +137,14 @@ def upload_doc(request):
                         "job_id": job_id,
                         "file_name": file_name,
                         "document": document,
+                        "doc_type": doc_type,
                     }
                     return render(
                         request,
                         "upload_doc/partials/upload_doc_get_result.html",
                         context=context,
                     )
-                elif doc_type == "scb_bank_statement":
+                elif doc_type == "Bank Statement":
                     # create a dataframe dic using get_doc_analysis_results_bs function and job_id as its parameter
                     data_frames_dicts = get_doc_analysis_results_bs(job_id)
 
@@ -159,8 +183,5 @@ def upload_doc(request):
         else:
             form.add_error(None, "Form is invalid. Please try again.")
             return render(request, "upload_doc/upload_doc.html", {"form": form})
-
-    else:
-        return HttpResponseForbidden("Invalid request method")
 
     return render(request, "upload_doc/upload_doc.html", {"form": form})

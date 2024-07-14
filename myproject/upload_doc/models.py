@@ -209,9 +209,11 @@ class AccountCategory(models.Model):
 
 
 class GLAccount(models.Model):
-    account_number = models.CharField(max_length=20, unique=True)
+    account_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
     name = models.CharField(max_length=255)
-    category = models.ForeignKey(AccountCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        AccountCategory, on_delete=models.CASCADE, null=True, blank=True
+    )
     description = models.CharField(max_length=255, blank=True, null=True)
     parent_account = models.ForeignKey(
         "self",
