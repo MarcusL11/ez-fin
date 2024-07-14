@@ -3,18 +3,21 @@
 {% load widget_tweaks %}
 {% block main %}
 <section class="my-10 flex-col items-center min-h-screen">
-  <header class="text-center">
-      <div class="flex justify-center items-center">
-          <img src="{% static 'svg/scb_logo.svg' %}" alt="SCB logo" class="h-24 w-auto mx-auto">
-      </div>
-      <h1>Upload Document</h1>
-    <p class="text-xs">(Only PDF, JPEGS, and PNG)</p>
-      <a href="" class="link text-xs">Example Documents</a>
-  </header>
+
   <div class="card border-2 p-10 my-10 text-center">
+    <header class="text-center">
+        <!-- TODO: Add hyperscript to select correct imge based on bank selection -->
+        <div class="flex justify-center items-center">
+            <img src="{% static 'svg/scb_logo.svg' %}" alt="SCB logo" class="h-24 w-auto mx-auto">
+        </div>
+        <h1>Upload Document</h1>
+      <p class="text-xs">(Only PDF, JPEGS, and PNG)</p>
+        <a href="" class="link text-xs">Example Documents</a>
+    </header>
     <form 
       action="" 
       method="post" 
+      class="flex flex-col items-center justify-center"
       enctype="multipart/form-data"
       hx-post="{% url 'upload_doc' %}"
       hx-target="#step1-result"
@@ -31,9 +34,10 @@
       end
       ">
       {{ form.non_field_errors }}
-      <div class="form-group">
+      <div class="md:w-1/2 lg:w-1/3">
         {% for field in form %}
-        <div class="flex flex-col space-y-4">
+
+        <div class="flex flex-col space-y-2">
           {{ field.label_tag }}
           {{ field|add_class:"p-2 border border-primary rounded focus:outline-none focus:ring focus:border-secondary" }}
           {% if field.errors %}
@@ -44,10 +48,12 @@
       </div>
       <div class="my-10">
         <button 
-          class="btn" 
+          class="btn btn-primary" 
           type="submit" 
           <span id="submit-button">Submit</span>
-          <span id="loading-button" class="hidden loading loading-dots loading-sm"></span>
+          <span 
+            id="loading-button" 
+            class="hidden loading loading-dots loading-sm"></span>
         </button>
       </div>
     </form>

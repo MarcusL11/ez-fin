@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 from django.conf import settings
 from pathvalidate import sanitize_filename
 from utilities.amz_textract_scb_cc import (
@@ -11,7 +11,6 @@ from .forms import UploadFileForm
 from utilities.amz_data_saver_scb_cc import save_data_to_models
 from utilities.amz_data_saver_scb_bs import save_data_to_models_bs
 from utilities.amz_textract_scb_bs import (
-    start_document_analysis_bs,
     get_doc_analysis_results_bs,
 )
 import time
@@ -20,23 +19,26 @@ from django.utils import timezone
 
 
 def upload_doc(request):
-    print("request received")
     form = UploadFileForm()
+
     if request.method == "POST":
         print("POST request received")
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             print("Form is valid")
             bucket = settings.AWS_STORAGE_BUCKET_NAME
-            file = request.FILES["file"]
-            file_name = request.POST["file_name"]
+            bank = request.POST["bank"]
             doc_type = request.POST["doc_type"]
-            print("USER File Name:" + file_name)
-            print("USER Doc Type:" + doc_type)
+            file_name = request.POST["file_name"]
+            file = request.FILES["file"]
+            print("Bank: " + bank)
+            print("Doc Type:" + doc_type)
+            print("File Name: " + file_name)
 
             # Validate file size to be less than 2MB
             print("Checking file size")
             file_size = file.size
+            print("File Size: " + str(file_size))
             file_size_limit = 2 * 1048576
             if file_size > file_size_limit:
                 form.add_error(
@@ -52,6 +54,7 @@ def upload_doc(request):
             print("Checking file type")
             allowed_file_types = ["application/pdf", "image/jpeg", "image/png"]
             file_type = file.content_type
+            print("File Type: " + file_type)
             if file_type not in allowed_file_types:
                 form.add_error(
                     None,
@@ -63,6 +66,7 @@ def upload_doc(request):
                     context={"form": form},
                 )
 
+            print("Sanitizing file name")
             # Sanitize file_name
             file_name = sanitize_filename(file_name)
 
@@ -73,8 +77,10 @@ def upload_doc(request):
             # add file type to file name
             file_name = file_name + "." + file_type.split("/")[1]
 
+            print("Sanitize File Name: " + file_name)
             print("Uploading file to S3")
             success = upload_file_to_s3(file, bucket, file_name)
+            print("Upload status: " + str(success))
 
             if success:
                 # if success, create a document variable that takes the file name
@@ -85,7 +91,6 @@ def upload_doc(request):
                 # https://www.youtube.com/watch?v=kzOBNLzpRLE <--- Tuturial on how to setup invoking Lambda on uploads
                 time.sleep(60)
 
-                # Check the doc_type
                 if doc_type == "scb_credit_card":
                     # Start the get_doc_analysis_results function to get the results of the analysis
                     data_frames_dicts = get_doc_analysis_results(job_id)
@@ -98,6 +103,7 @@ def upload_doc(request):
                     # Save the data to the all models with its relationships
                     try:
                         print("Saving data to models")
+                        # TODO: Consider adding Bank Type as a parameter instead of hardcoding
                         save_data_to_models(file_name, data_frames_dicts, document)
 
                     except Exception as e:
@@ -113,7 +119,7 @@ def upload_doc(request):
                         request,
                         "upload_doc/partials/upload_doc_get_result.html",
                         context=context,
-                    )  # TODO:
+                    )
                 elif doc_type == "scb_bank_statement":
                     # create a dataframe dic using get_doc_analysis_results_bs function and job_id as its parameter
                     data_frames_dicts = get_doc_analysis_results_bs(job_id)
@@ -141,19 +147,20 @@ def upload_doc(request):
                         request,
                         "upload_doc/partials/upload_doc_get_result.html",
                         context=context,
-                    )  # TODO:
-
-                else:
-                    form.add_error(None, "File upload failed. Please try again.")
-                    return render(
-                        request,
-                        "upload_doc/partials/upload_doc_errors.html",
-                        context={"form": form},  # TODO:
                     )
-        else:
-            form = UploadFileForm()
 
-        return render(request, "upload_doc/upload_doc.html", {"form": form})
+            else:
+                form.add_error(None, "File upload failed. Please try again.")
+                return render(
+                    request,
+                    "upload_doc/partials/upload_doc_errors.html",
+                    context={"form": form},
+                )
+        else:
+            form.add_error(None, "Form is invalid. Please try again.")
+            return render(request, "upload_doc/upload_doc.html", {"form": form})
 
     else:
-        return render(request, "upload_doc/upload_doc.html", {"form": form})
+        return HttpResponseForbidden("Invalid request method")
+
+    return render(request, "upload_doc/upload_doc.html", {"form": form})
