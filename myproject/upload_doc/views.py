@@ -14,29 +14,41 @@ from utilities.amz_textract_scb_bs import (
     get_doc_analysis_results_bs,
 )
 import time
-from .models import Document
+from .models import Document, TransactionType
 from django.utils import timezone
 
 
 def my_docs(request):
     documents = Document.objects.all()
-
     context = {"documents": documents}
-
     return render(request, "upload_doc/my_docs.html", context)
 
 
-def my_docs_detail(request, pk=None):
+def my_docs_detail(request, pk=None, transaction_type_slug=None):
     if request.method == "GET":
         document = get_object_or_404(Document, pk=pk)
-        doc_type = document.transaction_type.name
-        print("doc_type: " + str(doc_type))
+        transaction_type = get_object_or_404(
+            TransactionType, slug=transaction_type_slug
+        )
+        print("transaction_type_slug: " + str(transaction_type.slug))
 
-        context = {
-            "document": document,
-            "doc_type": doc_type,
-        }
-        return render(request, "upload_doc/partials/my_docs_detail.html", context)
+        if transaction_type.slug == "credit-card":
+            print("Credit Card Template was accessed")
+            context = {
+                "document": document,
+            }
+            return render(
+                request, "upload_doc/my_docs_detail_credit_card.html", context
+            )
+        elif transaction_type.slug == "bank-statement":
+            print("Bank Statement Template was accessed")
+            context = {
+                "document": document,
+            }
+            return render(request, "upload_doc/my_docs_detail_bs.html", context)
+        else:
+            return HttpResponseForbidden("Forbidden")
+
     else:
         return HttpResponseForbidden("Forbidden")
 

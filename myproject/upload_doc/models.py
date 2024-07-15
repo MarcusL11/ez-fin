@@ -16,9 +16,14 @@ class TransactionType(models.Model):
     """
 
     name = models.CharField(max_length=30)
+    slug = models.SlugField(max_length=30, null=True, blank=True)
 
     def __str__(self):
         return f"Transaction Type: {self.name}"
+
+    def save(self, *args, **kwargs):
+        self.slug = self.name.lower().replace(" ", "-")
+        super(TransactionType, self).save(*args, **kwargs)
 
 
 class ExpenseCategory(models.Model):

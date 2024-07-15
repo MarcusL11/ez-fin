@@ -1,0 +1,195 @@
+{% extends "../dashboard/dashboard_base.html" %}
+{% load static %}
+{% load humanize %}
+{% block main %}
+<div class="my-10 flex-col min-h-screen">
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs text-sm">
+    <ul>
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'my_docs' %}">My Docs</a></li>
+      <li>{{ document.name }}</li>
+    </ul>
+  </div>
+
+  <div class="mt-2 p-4">
+    <section class="flex-col">
+      <header class="my-2">
+        <h1 class="text-2xl font-bold mb-6">Document Name: {{ document.name }}</h1>
+        <p>Bank: {{ document.bank.name }}</p>
+        <p>Document Type: {{ document.transaction_type.name }}</p>
+        <p>Card Number: {{ document.credit_card_summary.card_number }}</p>
+        <p>Date Uploaded: {{ document.date_uploaded }}</p>
+        <p>New Balance: {{ document.balance_and_payment.new_balance|intcomma }}</p>
+        <p>Minimum Payment: {{ document.balance_and_payment.minimum_payment|intcomma }}</p>
+        <p>Payment Due Date: {{ document.balance_and_payment.payment_date }}</p>
+      </header>             
+    </section>
+    <form>
+      <!-- TODO: Change to functions at the header -->
+      <button
+        type="reset"
+        value="Deselect All"
+        class="btn btn-primary"
+        _="
+        on click 
+        set .checkbox.checked to false
+        end
+        ">Reset
+      </button>
+      <!-- TODO: Need to add logic to not select those that are disabled -->
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        _="
+        on click 
+        set .checkbox.checked to true
+        end
+        ">Select All
+      </button>
+              
+      <!-- TODO: Add URL for Save to Database -->
+      <button 
+        type="submit" 
+        class="btn btn-primary" 
+        hx-post=""
+        hx-target="#submit-message"
+        hx-swap="innerHTML"
+        hx-trigger="click"
+        hx-vals='{"document_id":"{{ document.id }}"}'>
+        Add to Database
+      </button>
+       <!--TODO: Add URL for saving category expensee -->
+      <button 
+        type="submit" 
+        class="btn btn-primary" 
+        hx-post=""
+        hx-target="#submit-message"
+        hx-swap="innerHTML"
+        hx-trigger="click"
+        hx-vals=''>Save Category
+      </button>
+      <!-- TODO: Add AI functionality to categorize -->
+      <button 
+        type="submit" 
+        class="btn btn-primary" 
+        hx-post=""
+        hx-target="#submit-message"
+        hx-swap="innerHTML"
+        hx-trigger="click"
+        hx-vals=''>
+        Categorize with
+        <img src="{% static 'svg/ai_icon.svg' %}" alt="">
+      </button>
+
+      <div id="submit-message"></div>
+      <div class="overflow-x-auto">
+        <table class="my-10 table table-xs">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>
+                <!-- TODO: Add Hyperscript function to select all and deselect-->
+                <label>
+                  <input type="checkbox" class="checkbox checkbox-xs" />
+                </label>
+              </th>
+              <th>Bank</th>
+              <th>Transaction Type</th>
+              <th>Transaction Date</th>
+              <th>Description</th>
+              <th>Debit</th>
+              <th>Credit</th>
+              <th>Category</th>
+              <th></th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for transaction in document.transaction_details.all %}
+            <tr>
+              <td>{{ forloop.counter }}</td> 
+              <td>
+                {% if transaction.saved %}
+                <input type="checkbox" class="checkbox checkbox-xs" disabled />
+                {% else%}
+                <input 
+                  type="checkbox" 
+                  class="checkbox checkbox-xs"
+                  name="transaction_ids"
+                  value="{{ transaction.id }}"
+                  _="
+                  on load 
+                  set my.checked to false
+                  end 
+                  "/>
+                {% endif %}
+              </td>
+              <td>{{ document.bank.name }}</td>
+              <td>{{ document.transaction_type.name }}</td>
+              <td>{{ transaction.transaction_date }}</td>
+              <td>{{ transaction.description }}</td>
+              <td>
+                {% if transaction.amount < 0 %}
+                {{ transaction.amount|intcomma }}
+                {% else %}
+                0
+                {% endif %}
+              </td>
+              <td>
+                {% if transaction.amount > 0 %}
+                {{ transaction.amount|intcomma }}
+                {% else %}
+                0
+                {% endif %}
+              </td>
+              {% if transaction.expense_category.name %}
+              <td>{{ transaction.expense_category.name }}</td>
+              <!--TODO: Add HTMX function to edit category -->
+              <td>
+                <button class="">
+                  <img src="{% static 'svg/edit_icon.svg' %}" alt="">
+                </button>
+              </td>
+              {% else %}
+              <td>
+                <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+              </td>
+              <td>
+                <!--TODO: Add HTMX function to save category -->
+                <button class="">
+                  <img src="{% static 'svg/save_icon.svg' %}" alt="">
+                </button>
+              </td>
+              {% endif %}
+
+              <td>
+                {% if transaction.saved %}
+                <span class="text-success">Saved</span>
+                {% else %}
+                <span class="text-error">Not Saved</span>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <div class="flex space-x-1">
+      <!--TODO: Add URL for function to copy -->
+      <a href="" class="block py-2.5 rounded">         
+        <button class="btn btn-primary">Copy Table
+        </button>
+      </a>
+      <!--TODO: Add URL for Document Download CSV -->
+      <a href="" class="block py-2.5 rounded">         
+        <button class="btn btn-primary">Download
+          <img src="{% static 'svg/csv_icon.svg' %}" alt="">
+        </button>
+      </a> 
+    </div>
+  </div>
+</div>
+
+{% endblock %}

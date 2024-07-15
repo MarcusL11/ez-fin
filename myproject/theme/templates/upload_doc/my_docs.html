@@ -2,22 +2,62 @@
 {% load static %}
 {% block main %}
 <section>
-  <div class="border rounded-xl p-2">
+  <div>
     <header class="mb-2">
       <h2 class="text-2xl font-semibold">My Documents</h2>
     </header>
-    <ul class="list-disc pl-4">
+  </div>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>
+            <label>
+              <input type="checkbox" class="checkbox" />
+            </label>
+          </th>
+          <th>Name</th>
+          <th>Bank</th>
+          <th>Document Type</th>
+          <th># items not saved</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
       {% for document in documents %}
-      <a href="{% url 'my_docs_detail' document.pk %}">
-          <li>
-            <span class="no-underline link hover:underline">
-              Date Uploaded: {{ document.date_uploaded|date:"M j, y" }} |
-              {{ document.name }} - # of not saved: {{ document.not_saved_transactions_count }}
-            </span>
-          </li>
-        </a>
+        <!-- row 1 -->
+          <tr>
+            <td>
+              <label>
+                <input type="checkbox" class="checkbox" />
+              </label>
+            </td>
+            <td>
+              <div>
+                <div class="font-bold">{{ document.name }}</div>
+                <div class="text-xs opacity-50">Uploaded at: {{ document.date_uploaded|date:"M j, y"}}</div>
+              </div>
+            </td>
+            <td>
+              <div class="font-bold">{{ document.bank.name }}</div>
+            </td>
+            <td>
+              <div class="font-bold">{{ document.transaction_type.name }}</div>
+            </td>
+            <td>
+              <!-- TODO: create the custom tag for this -->
+              <div class="font-bold">{{ document.not_saved_transactions_count }}</div>
+            </td>
+            <td>
+              <a href="{% url 'my_docs_detail' document.pk document.transaction_type.slug %}">
+                <button class="btn btn-primary">View</button>
+              </a>
+            </td>
+          </tr>
       {% endfor %}
-    </ul>
+      </tbody>
+    </table>
   </div>
 
 </section>
