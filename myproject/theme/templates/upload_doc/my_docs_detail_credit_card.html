@@ -25,35 +25,13 @@
         <p>Payment Due Date: {{ document.balance_and_payment.payment_date }}</p>
       </header>             
     </section>
-    <form>
-      <!-- TODO: Change to functions at the header -->
-      <button
-        type="reset"
-        value="Deselect All"
-        class="btn btn-primary"
-        _="
-        on click 
-        set .checkbox.checked to false
-        end
-        ">Reset
-      </button>
-      <!-- TODO: Need to add logic to not select those that are disabled -->
-      <button 
-        type="button" 
-        class="btn btn-primary" 
-        _="
-        on click 
-        set .checkbox.checked to true
-        end
-        ">Select All
-      </button>
-              
+
       <!-- TODO: Add URL for Save to Database -->
       <button 
         type="submit" 
         class="btn btn-primary" 
         hx-post=""
-        hx-target="#submit-message"
+        hx-target=""
         hx-swap="innerHTML"
         hx-trigger="click"
         hx-vals='{"document_id":"{{ document.id }}"}'>
@@ -64,7 +42,7 @@
         type="submit" 
         class="btn btn-primary" 
         hx-post=""
-        hx-target="#submit-message"
+        hx-target=""
         hx-swap="innerHTML"
         hx-trigger="click"
         hx-vals=''>Save Category
@@ -74,7 +52,7 @@
         type="submit" 
         class="btn btn-primary" 
         hx-post=""
-        hx-target="#submit-message"
+        hx-target=""
         hx-swap="innerHTML"
         hx-trigger="click"
         hx-vals=''>
@@ -82,7 +60,7 @@
         <img src="{% static 'svg/ai_icon.svg' %}" alt="">
       </button>
 
-      <div id="submit-message"></div>
+
       <div class="overflow-x-auto">
         <table class="my-10 table table-xs">
           <thead>
@@ -91,15 +69,19 @@
               <th>
                 <!-- TODO: Add Hyperscript function to select all and deselect-->
                 <label>
-                  <input type="checkbox" class="checkbox checkbox-xs" />
+                  <input type="checkbox" class="checkbox checkbox-xs"
+                  _="
+                    on click
+                      set .checkbox.checked to my.checked
+                    end
+                  "/>
                 </label>
               </th>
               <th>Bank</th>
               <th>Transaction Type</th>
               <th>Transaction Date</th>
               <th>Description</th>
-              <th>Debit</th>
-              <th>Credit</th>
+              <th>Amount</th>
               <th>Category</th>
               <th></th>
               <th>Status</th>
@@ -107,11 +89,14 @@
           </thead>
           <tbody>
             {% for transaction in document.transaction_details.all %}
-            <tr>
+            <tr id="transaction_row_{{ transaction.id}}">
               <td>{{ forloop.counter }}</td> 
               <td>
                 {% if transaction.saved %}
-                <input type="checkbox" class="checkbox checkbox-xs" disabled />
+                <input 
+                  type="checkbox" 
+                  class="checkbox checkbox-xs" 
+                  disabled />
                 {% else%}
                 <input 
                   type="checkbox" 
@@ -129,20 +114,8 @@
               <td>{{ document.transaction_type.name }}</td>
               <td>{{ transaction.transaction_date }}</td>
               <td>{{ transaction.description }}</td>
-              <td>
-                {% if transaction.amount < 0 %}
-                {{ transaction.amount|intcomma }}
-                {% else %}
-                0
-                {% endif %}
-              </td>
-              <td>
-                {% if transaction.amount > 0 %}
-                {{ transaction.amount|intcomma }}
-                {% else %}
-                0
-                {% endif %}
-              </td>
+              <td>{{ transaction.amount|intcomma }}</td>
+
               {% if transaction.expense_category.name %}
               <td>{{ transaction.expense_category.name }}</td>
               <!--TODO: Add HTMX function to edit category -->
@@ -153,16 +126,36 @@
               </td>
               {% else %}
               <td>
-                <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
-              </td>
-              <td>
-                <!--TODO: Add HTMX function to save category -->
-                <button class="">
-                  <img src="{% static 'svg/save_icon.svg' %}" alt="">
-                </button>
+                <div class="flex items-center">
+
+                  <div class="data_inputs_{{ transaction.id }}">
+                    <input 
+                      type="text" 
+                      name="transaction_category"
+                      placeholder="Type here" 
+                      class="input input-bordered w-full max-w-xs"/>
+                    <input 
+                      type="hidden" 
+                      name="transaction_id" 
+                      value="{{ transaction.id }}"/>
+                    <input 
+                      type="hidden" 
+                      name="counter_loop" 
+                      value="{{ forloop.counter }}"/>
+                  </div>
+
+                  <div
+                    hx-post="{% url 'save_category' %}"
+                    hx-target="#transaction_row_{{ transaction.id }}"
+                    hx-swap="outerHTML"
+                    hx-trigger="click"
+                    hx-include=".data_inputs_{{ transaction.id }} input">
+                    <img src="{% static 'svg/save_icon.svg' %}">
+                  </div>
+                </div>
               </td>
               {% endif %}
-
+              
               <td>
                 {% if transaction.saved %}
                 <span class="text-success">Saved</span>
@@ -175,7 +168,6 @@
           </tbody>
         </table>
       </div>
-    </form>
     <div class="flex space-x-1">
       <!--TODO: Add URL for function to copy -->
       <a href="" class="block py-2.5 rounded">         

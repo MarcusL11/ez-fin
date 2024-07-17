@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "accounts",
     "dashboard",
     "upload_doc",
+    "save_category",
 ]
 
 TAILWIND_APP_NAME = "theme"

@@ -6,6 +6,7 @@ urlpatterns = [
     path("", include("accounts.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("upload_doc/", include("upload_doc.urls")),
+    path("save_category/", include("save_category.urls")),
 ]
 
 # if not settings.TESTING:
