@@ -1,5 +1,5 @@
 {% load static %}
-{% load humanize %}
+{% load humanize %} 
 <tr id="transaction_row_{{ transaction.id}}">
   <td>{{ counter_loop }}</td> 
   <td>
@@ -8,7 +8,7 @@
       type="checkbox" 
       class="checkbox checkbox-xs" 
       disabled />
-    {% else%}
+    {% else %}
     <input 
       type="checkbox" 
       class="checkbox checkbox-xs"
@@ -26,31 +26,12 @@
   <td>{{ transaction.transaction_date }}</td>
   <td>{{ transaction.description }}</td>
   <td>{{ transaction.amount|intcomma }}</td>
-
-  {% if transaction.expense_category.name %}
-  <td>{{ transaction.expense_category.name }}</td>
-  <!--TODO: Add HTMX function to edit category -->
-  <td>
-    <div 
-      class="btn btn-ghost"
-      hx-post="{% url 'edit_category' %}"
-      hx-target="#transaction_row_{{ transaction.id }}"
-      hx-swap="outerHTML"
-      hx-trigger="click"
-      hx-vals='{
-      "transaction_id":"{{ transaction.id }}",
-      "counter_loop":"{{ counter_loop }}"
-      }'>
-      <img src="{% static 'svg/edit_icon.svg' %}" alt="">
-    </div>
-  </td>
-  {% else %}
   <td>
     <div class="data_inputs_{{ transaction.id }}">
       <input 
         type="text" 
         name="transaction_category"
-        placeholder="Type here" 
+        placeholder="{{ transaction.expense_category.name }}"
         class="input input-bordered w-full max-w-xs"/>
       <input 
         type="hidden" 
@@ -59,10 +40,9 @@
       <input 
         type="hidden" 
         name="counter_loop" 
-        value="{{ forloop.counter }}"/>
+        value="{{ counter_loop }}"/>
     </div>
   </td>
-  
   <td>
     <div
       class="btn btn-ghost"
@@ -74,7 +54,8 @@
       <img src="{% static 'svg/save_icon.svg' %}">
     </div>
   </td>
- 
-  {% endif %}
 
 </tr>
+
+
+

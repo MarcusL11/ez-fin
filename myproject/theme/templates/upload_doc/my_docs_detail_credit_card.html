@@ -84,11 +84,11 @@
               <th>Amount</th>
               <th>Category</th>
               <th></th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {% for transaction in document.transaction_details.all %}
+            <!-- TODO: Convert Table Row into a Reusable Component -->
             <tr id="transaction_row_{{ transaction.id}}">
               <td>{{ forloop.counter }}</td> 
               <td>
@@ -120,49 +120,50 @@
               <td>{{ transaction.expense_category.name }}</td>
               <!--TODO: Add HTMX function to edit category -->
               <td>
-                <button class="">
-                  <img src="{% static 'svg/edit_icon.svg' %}" alt="">
-                </button>
+                <div 
+                  class="btn btn-ghost"
+                  hx-post="{% url 'edit_category' %}"
+                  hx-target="#transaction_row_{{ transaction.id }}"
+                  hx-swap="outerHTML"
+                  hx-trigger="click"
+                  hx-vals='{
+                    "transaction_id":"{{ transaction.id }}",
+                    "counter_loop":"{{ forloop.counter }}"
+                  }'>
+                    <img src="{% static 'svg/edit_icon.svg' %}" alt="">
+                </div>
               </td>
               {% else %}
               <td>
-                <div class="flex items-center">
-
-                  <div class="data_inputs_{{ transaction.id }}">
-                    <input 
-                      type="text" 
-                      name="transaction_category"
-                      placeholder="Type here" 
-                      class="input input-bordered w-full max-w-xs"/>
-                    <input 
-                      type="hidden" 
-                      name="transaction_id" 
-                      value="{{ transaction.id }}"/>
-                    <input 
-                      type="hidden" 
-                      name="counter_loop" 
-                      value="{{ forloop.counter }}"/>
-                  </div>
-
-                  <div
-                    hx-post="{% url 'save_category' %}"
-                    hx-target="#transaction_row_{{ transaction.id }}"
-                    hx-swap="outerHTML"
-                    hx-trigger="click"
-                    hx-include=".data_inputs_{{ transaction.id }} input">
-                    <img src="{% static 'svg/save_icon.svg' %}">
-                  </div>
+                <div class="data_inputs_{{ transaction.id }}">
+                  <input 
+                    type="text" 
+                    name="transaction_category"
+                    placeholder="Type here" 
+                    class="input input-bordered w-full max-w-xs"/>
+                  <input 
+                    type="hidden" 
+                    name="transaction_id" 
+                    value="{{ transaction.id }}"/>
+                  <input 
+                    type="hidden" 
+                    name="counter_loop" 
+                    value="{{ forloop.counter }}"/>
+                </div>
+              </td>
+              <td>
+                <div
+                  class="btn btn-ghost"
+                  hx-post="{% url 'save_category' %}"
+                  hx-target="#transaction_row_{{ transaction.id }}"
+                  hx-swap="outerHTML"
+                  hx-trigger="click"
+                  hx-include=".data_inputs_{{ transaction.id }} input">
+                  <img src="{% static 'svg/save_icon.svg' %}">
                 </div>
               </td>
               {% endif %}
-              
-              <td>
-                {% if transaction.saved %}
-                <span class="text-success">Saved</span>
-                {% else %}
-                <span class="text-error">Not Saved</span>
-              </td>
-              {% endif %}
+
             </tr>
             {% endfor %}
           </tbody>

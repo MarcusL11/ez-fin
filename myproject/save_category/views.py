@@ -46,3 +46,30 @@ def save_category(request):
         )
     else:
         return HttpResponse(status=405)
+
+
+def edit_category(request):
+    if request.method == "POST":
+        print("Edit category view POST request: ", request.POST)
+        try:
+            transaction_id = request.POST.get("transaction_id")
+            print("Transaction_id Post.get:", transaction_id)
+            transaction = get_object_or_404(TransactionDetail, pk=transaction_id)
+        except Exception as e:
+            print("Error: ", e)
+            return HttpResponse(status=400)
+
+        counter_loop = request.POST.get("counter_loop")
+        print("Counter loop: ", counter_loop)
+
+        document = transaction.document
+
+        return render(
+            request,
+            "save_category/partials/edit_category.html",
+            context={
+                "document": document,
+                "transaction": transaction,
+                "counter_loop": counter_loop,
+            },
+        )
