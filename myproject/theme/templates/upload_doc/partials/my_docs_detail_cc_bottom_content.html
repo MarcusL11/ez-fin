@@ -1,0 +1,27 @@
+<!-- BOTTOM CONTENT -->
+{% load static %}
+<div class="flex items-center space-x-1">
+  <!-- TODO: Add AI functionality to categorize -->
+  <button 
+    type="submit" 
+    class="btn btn-primary" 
+    hx-post=""
+    hx-target=""
+    hx-swap="innerHTML"
+    hx-trigger="click"
+    hx-vals=''>
+    Categorize with
+    <img src="{% static 'svg/ai_icon.svg' %}" alt="">
+  </button>
+  <!--TODO: Add URL for function to copy -->
+  <a href="" class="block py-2.5 rounded">         
+    <button class="btn btn-primary">Copy Table
+    </button>
+  </a>
+  <!--TODO: Add URL for Document Download CSV -->
+  <a href="" class="block py-2.5 rounded">         
+    <button class="btn btn-primary">Download
+      <img src="{% static 'svg/csv_icon.svg' %}" alt="">
+    </button>
+  </a> 
+</div>

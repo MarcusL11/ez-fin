@@ -32,7 +32,19 @@
         type="text" 
         name="transaction_category"
         placeholder="{{ transaction.expense_category.name }}"
-        class="input input-bordered w-full max-w-xs"/>
+        class="input input-bordered input-sm w-full max-w-xs"
+        _="
+          on focus 
+            set my @placeholder to ''
+          end
+          on keyup[key is 'Enter']
+            trigger click on the next .btn
+          end
+          on keyup[key is 'Escape']
+            set my value to '{{ transaction.expense_category.name }}' then
+            trigger click on the next .btn
+          end
+          "/>
       <input 
         type="hidden" 
         name="transaction_id" 
