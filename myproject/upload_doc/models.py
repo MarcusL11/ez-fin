@@ -31,6 +31,8 @@ class ExpenseCategory(models.Model):
     category for each transaction
     """
 
+    # TODO: Add one-to-one with User
+
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -42,6 +44,7 @@ class Document(models.Model):
     and all other details related to it
     """
 
+    # TODO: Add one-to-one with User
     name = models.CharField(max_length=255, null=True, blank=True)
 
     date_uploaded = models.DateTimeField(auto_now_add=True)
@@ -84,6 +87,7 @@ class CreditCardSummary(models.Model):
     summary details from each document
     """
 
+    # TODO: Add one-to-one with User
     card_number = models.CharField(max_length=20, null=True, blank=True)
     credit_limit = models.DecimalField(
         max_digits=10,
@@ -102,6 +106,7 @@ class BalanceAndPayment(models.Model):
     payment details for each document
     """
 
+    # TODO: Add one-to-one with User
     new_balance = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -161,8 +166,6 @@ class TransactionDetail(models.Model):
         null=True,
         blank=True,
     )
-    pl_statement = models.BooleanField(default=False)
-    cf_statement = models.BooleanField(default=False)
     saved = models.BooleanField(default=False)
     account_category = models.ForeignKey(
         "AccountCategory",

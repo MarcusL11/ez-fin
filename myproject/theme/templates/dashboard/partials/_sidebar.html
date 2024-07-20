@@ -1,35 +1,51 @@
+
 {% load static %}
 
 <!-- Sidebar -->
-<aside id="sidebar" class="z-10 hidden lg:block bg-primary w-20 py-4 px-2 flex-shrink-0 sticky top-0 h-screen">
-  <a href="">
+<aside id="sidebar" class="z-10 hidden lg:flex flex-col items-center bg-primary w-20 py-4 px-2 flex-shrink-0 sticky top-0 h-screen">
+  <a href="{% url 'home' %}">
     <div class="text-lg font-bold hover:text-white">EZFin</div>
   </a>
-  <nav class="mt-10">
-    <ul class="text-center">
+  <nav class="mt-10 flex flex-col items-center">
+    <ul class="w-full">
+
       <!-- Dashboard -->
-      <li class="mb-6">
+      <li class="mb-6 flex justify-center">
         <a href="{% url 'dashboard' %}" class="block py-2.5 px-4 rounded">         
-          <img src="{% static 'svg/dashboard_icon.svg' %}" alt="Your image description">
+          <img src="{% static 'svg/dashboard_icon.svg' %}" alt="Dashboard">
         </a>
       </li>
       <!-- Upload Doc -->
-      <li class="mb-6">
+      <li class="mb-6 flex justify-center">
         <a href="{% url 'upload_doc' %}" class="block py-2.5 px-4 rounded">         
-          <img src="{% static 'svg/upload_icon.svg' %}" alt="Your image description">
+          <img src="{% static 'svg/upload_icon.svg' %}" alt="Upload Document">
         </a>
       </li>
       <!-- My Docs -->
-      <li class="mb-6">
+      <li class="mb-6 flex justify-center">
         <a href="{% url 'my_docs' %}" class="block py-2.5 px-4 rounded">         
-          <img src="{% static 'svg/document_icon.svg' %}" alt="Your image description">
+          <img src="{% static 'svg/document_icon.svg' %}" alt="My Documents">
         </a>
       </li>
-      <li class="mb-6">
+      <!-- Categories -->
+      <li class="mb-6 flex justify-center">
+        <a href="{% url 'category' %}" class="block py-2.5 px-4 rounded">         
+          <img src="{% static 'svg/tag_icon.svg' %}" alt="Categories">
+        </a>
+      </li>
+      <!-- Profile -->
+      <li class="mb-6 flex justify-center">
         <a href="" class="block py-2.5 px-4 rounded">         
-          <img src="{% static 'svg/tag_icon.svg' %}" alt="">
+          Profile
+        </a>
+      </li>
+      <!-- Logout -->
+      <li class="mb-6 flex justify-center">
+        <a href="{% url 'sign_out' %}" class="block py-2.5 px-4 rounded">         
+          Logout
         </a>
       </li>
     </ul>
   </nav>
 </aside>
+

@@ -3,20 +3,23 @@
 {% load django_htmx %}
 <!DOCTYPE html>
 <html data-theme="emerald" lang="en">
-   <head>
-       <title></title>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-       {% tailwind_css %}
-       <!--  ///_hyperscript library https://unpkg.com/hyperscript.org@0.9.12/dist/_hyperscript.min.js -->
-       <script src="{% static 'js/dist/hyperscript.min.js' %}"></script>
-       <!-- htmx library https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js -->
-       <script src="{% static 'js/dist/htmx.min.js' %}" defer></script> 
-   </head>
+    {% tailwind_css %}
+    <!--  ///_hyperscript library https://unpkg.com/hyperscript.org@0.9.12/dist/_hyperscript.min.js -->
+    <script src="{% static 'js/dist/hyperscript.min.js' %}"></script>
+    <!-- htmx library https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js -->
+    <script src="{% static 'js/dist/htmx.min.js' %}" defer></script> 
 
-   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js" integrity="sha512-7x3zila4t2qNycrtZ31HO0NnJr8kg2VI67YLoRSyi9hGhRN66FHYWr7Axa9Y1J9tGYHVBPqIjSE1ogHrJTz51g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> 
+  </head>
+
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="container flex justify-center mx-auto">
       {% block content %} {% endblock content %}
     </div>

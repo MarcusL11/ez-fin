@@ -2,15 +2,15 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.conf import settings
 from pathvalidate import sanitize_filename
-from utilities.amz_textract_scb_cc import (
+from utilities.amazon_textract.amz_textract_scb_cc import (
     upload_file_to_s3,
     start_document_analysis,
     get_doc_analysis_results,
 )
 from .forms import UploadFileForm
-from utilities.amz_data_saver_scb_cc import save_data_to_models
-from utilities.amz_data_saver_scb_bs import save_data_to_models_bs
-from utilities.amz_textract_scb_bs import (
+from utilities.amazon_textract.amz_data_saver_scb_cc import save_data_to_models
+from utilities.amazon_textract.amz_data_saver_scb_bs import save_data_to_models_bs
+from utilities.amazon_textract.amz_textract_scb_bs import (
     get_doc_analysis_results_bs,
 )
 import time
