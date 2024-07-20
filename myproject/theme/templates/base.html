@@ -20,6 +20,7 @@
   </head>
 
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    
     <div class="container flex justify-center mx-auto">
       {% block content %} {% endblock content %}
     </div>

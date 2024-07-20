@@ -16,6 +16,9 @@
        <!-- htmx library https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js -->
        <script src="{% static 'js/dist/htmx.min.js' %}" defer></script> 
    </head> 
+    <header class="max-w-screen-xl mx-auto px-4 container">
+      {% include '_header.html' %}
+    </header>
 
     <body class="font-body" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
       {% block main %}{% endblock main %}

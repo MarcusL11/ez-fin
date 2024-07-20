@@ -1,14 +1,14 @@
 {% extends "../dashboard/dashboard_base.html" %}
 {% load static %}
 {% block main %}
-<section class="my-10 flex-col items-center min-h-screen">
+<section class="flex-col items-center min-h-screen">
   <div>
     <header class="mb-2">
       <h2 class="text-2xl font-semibold">Category</h2>
     </header>
   </div>
 
-  <div class="w-1/2 justify-center mx-auto">
+  <div class="card border-2 border-primary w-full justify-center mx-auto">
     <div class="p-10 rounded-lg shadow-md">
       <ul class="space-y-2">
       {% for category in categories %}
