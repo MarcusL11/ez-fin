@@ -2,50 +2,44 @@
 {% load static %}
 
 <!-- Sidebar -->
-<aside id="sidebar" class="z-10 hidden lg:flex flex-col items-center bg-primary w-20 py-4 px-2 flex-shrink-0 sticky top-0 h-screen">
-  <a href="{% url 'home' %}">
-    <div class="text-lg font-bold hover:text-white">EZFin</div>
-  </a>
-  <nav class="mt-10 flex flex-col items-center">
-    <ul class="w-full">
-
-      <!-- Dashboard -->
-      <li class="mb-6 flex justify-center">
-        <a href="{% url 'dashboard' %}" class="block py-2.5 px-4 rounded">         
-          <img src="{% static 'svg/dashboard_icon.svg' %}" alt="Dashboard">
+<aside id="sidebar" class="z-10 hidden lg:flex flex-col items-center bg-primary border-2 rounded w-12 py-4 px-2 flex-shrink-0 sticky top-0 h-screen justify-between">
+  <nav class="mt-2 flex flex-col items-center">
+    <ul class="w-full space-y-4">
+      <!-- Home -->
+      <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
+        <a href="{% url 'home' %}" class=" rounded">         
+          <img src="{% static 'svg/home_icon.svg' %}" alt="Home" class="">
         </a>
       </li>
+
+      <!-- Dashboard -->
+      <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
+        <a href="{% url 'dashboard' %}" class=" rounded">         
+          <img src="{% static 'svg/dashboard_icon.svg' %}" alt="Dashboard" class="w-6 h-6">
+        </a>
+      </li>
+
       <!-- Upload Doc -->
-      <li class="mb-6 flex justify-center">
-        <a href="{% url 'upload_doc' %}" class="block py-2.5 px-4 rounded">         
-          <img src="{% static 'svg/upload_icon.svg' %}" alt="Upload Document">
+      <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
+        <a href="{% url 'upload_doc' %}" class=" rounded">         
+          <img src="{% static 'svg/upload_icon.svg' %}" alt="Upload Document" class="">
         </a>
       </li>
       <!-- My Docs -->
-      <li class="mb-6 flex justify-center">
-        <a href="{% url 'my_docs' %}" class="block py-2.5 px-4 rounded">         
-          <img src="{% static 'svg/document_icon.svg' %}" alt="My Documents">
+      <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
+        <a href="{% url 'my_docs' %}" class=" rounded">         
+          <img src="{% static 'svg/document_icon.svg' %}" alt="My Documents" class="">
         </a>
       </li>
       <!-- Categories -->
-      <li class="mb-6 flex justify-center">
-        <a href="{% url 'category' %}" class="block py-2.5 px-4 rounded">         
-          <img src="{% static 'svg/tag_icon.svg' %}" alt="Categories">
+      <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
+        <a href="{% url 'category' %}" class=" rounded">         
+          <img src="{% static 'svg/tag_icon.svg' %}" alt="Categories" class="">
         </a>
       </li>
-      <!-- Profile -->
-      <li class="mb-6 flex justify-center">
-        <a href="" class="block py-2.5 px-4 rounded">         
-          Profile
-        </a>
-      </li>
-      <!-- Logout -->
-      <li class="mb-6 flex justify-center">
-        <a href="{% url 'sign_out' %}" class="block py-2.5 px-4 rounded">         
-          Logout
-        </a>
-      </li>
+
     </ul>
   </nav>
+
 </aside>
 

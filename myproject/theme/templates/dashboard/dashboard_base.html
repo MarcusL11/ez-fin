@@ -2,7 +2,7 @@
 {% load static %}
 {% load django_htmx %}
 <!DOCTYPE html>
-<html data-theme="emerald" lang="en">
+<html data-theme="dark" lang="en">
   <head>
     <title</title>
     <meta charset="UTF-8">
@@ -21,11 +21,17 @@
       <!-- -- Sidebar -- -->
       {% include "dashboard/partials/_sidebar.html" %}
 
-      <main class="flex-1 p-8 overflow-y-auto">
-        {% block main %}
+      <div class="flex flex-col w-full">
+        <!-- Top Bar -->
+        {% include "dashboard/partials/_topbar.html" %}
 
-        {% endblock main%}
-      </main>
+        <main class="flex-1 p-8 overflow-y-auto">
+          {% block main %}
+
+          {% endblock main%}
+        </main>
+
+      </div>
 
     </div>
   </body>
