@@ -1,9 +1,8 @@
-{% extends "base.html" %}
+{% extends "landing_base.html" %}
 {% block content %}
-<div class="container mx-auto">
-  <div class="flex flex-col text-center px-10">
+  <div class="text-center container justify-center mx-auto px-12">
     <div class="mt-4"> 
-      <div class="mb-6 card border-2 border-primary rounded-3xl duration-500">
+      <div class="mb-6 card border-2 border-primary rounded-3xl">
         <div class="card-body">                
           <h1 class="text-2xl font-bold">Email Verification Login</h1>
           <div class="mt-6 mb-2"> 
@@ -30,10 +29,9 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- TODO: Convert this function into hyperscript on the button -->
-<script>
+  <!-- TODO: Convert this function into hyperscript on the button -->
+  <script>
 document.body.addEventListener('htmx:beforeRequest', function(event) {
   if (event.target === document.querySelector('form')) {
     document.getElementById('login-text').classList.add('hidden');
@@ -47,7 +45,7 @@ document.body.addEventListener('htmx:afterRequest', function(event) {
     document.getElementById('login-btn').classList.add('hidden');
   }
 });
-</script>
+  </script>
 
-{% endblock content %}
+  {% endblock content %}
 

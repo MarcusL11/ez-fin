@@ -1,0 +1,22 @@
+{% load widget_tweaks %}
+{% load static %}
+<li 
+  class="flex justify-between items-center bg-gray-100 p-2 rounded"
+  id="category_list_{{ category_id }}">
+  <form 
+    method="POST"
+    hx-post="{% url 'save_category_list' %}" 
+    hx-trigger="submit" 
+    hx-target="#category_list"
+    hx-swap="innerHTML"
+    hx-include="[name='category_id']">
+    {% csrf_token %}
+    <div class="flex items-center space-x-1">
+      {{ form.category_name|add_class:"input-sm rounded-lg border-primary" }}
+      <input type="hidden" name="category_id" value="{{ category_id }}">
+      <button class="btn btn-ghost" type="submit">
+        <img src="{% static 'svg/save_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
+      </button>
+    </div>
+  </form>
+</li>
