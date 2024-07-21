@@ -34,17 +34,38 @@
   </li>
   {% endfor %}
 </ul>
-<!--Add Category Button-->
 <form 
   method="POST"
   hx-post="{% url 'add_category_list' %}" 
   hx-trigger="submit" 
   hx-target="#category_list"
   hx-swap="innerHTML"
-  class="">
+  class=""
+  _="
+  on submit
+  set #id_category_name's to ''
+  end
+  ">
   {% csrf_token %}
   <div class="flex items-center space-x-1">
-    {{ form.category_name|add_class:"input-sm rounded-lg border-primary"|attr:"placeholder:New Category" }}
+    <input 
+      type="text" 
+      name="category_name" 
+      maxlength="100" 
+      placeholder="New Category" 
+      class="input-sm rounded-lg border-primary" 
+      required="" 
+      id="id_category_name"
+      _="
+      on focus 
+      set my @placeholder to ''
+      end
+      on keyup[key is 'Enter']
+      trigger click on the next .btn
+      end
+      on keyup[key is 'Escape']
+      set my @placeholder to 'New Category'
+      end"/>
     <button 
       class="btn btn-sm btn-primary"
       type="submit">
