@@ -2646,12 +2646,28 @@ html {
   height: 100vh;
 }
 
+.max-h-\[20px\] {
+  max-height: 20px;
+}
+
+.max-h-\[25px\] {
+  max-height: 25px;
+}
+
 .min-h-\[25px\] {
   min-height: 25px;
 }
 
 .min-h-screen {
   min-height: 100vh;
+}
+
+.min-h-\[20px\] {
+  min-height: 20px;
+}
+
+.min-h-\[10px\] {
+  min-height: 10px;
 }
 
 .w-1\/2 {
@@ -2694,6 +2710,14 @@ html {
   min-width: 25px;
 }
 
+.min-w-\[20px\] {
+  min-width: 20px;
+}
+
+.min-w-\[10px\] {
+  min-width: 10px;
+}
+
 .max-w-screen-xl {
   max-width: 1280px;
 }
@@ -2704,6 +2728,14 @@ html {
 
 .max-w-xs {
   max-width: 20rem;
+}
+
+.max-w-\[20px\] {
+  max-width: 20px;
+}
+
+.max-w-\[25px\] {
+  max-width: 25px;
 }
 
 .flex-1 {

@@ -38,8 +38,11 @@ def edit_category_list(request):
     if request.method == "POST":
         form = CategoryForm()
         category_id = request.POST.get("category_id")
+        category_name = request.POST.get("category_name")
+        print("category_name: ", category_name)
         context = {
             "category_id": category_id,
+            "category_name": category_name,
             "form": form,
         }
         return render(request, "category/partials/edit_category_list.html", context)

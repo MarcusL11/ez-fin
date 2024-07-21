@@ -12,10 +12,28 @@
     hx-include="[name='category_id']">
     {% csrf_token %}
     <div class="flex items-center space-x-1">
-      {{ form.category_name|add_class:"input-sm rounded-lg border-primary" }}
+      <input
+        type="text" 
+        name="category_name" 
+        maxlength="100" 
+        placeholder="{{ category_name }}"
+        class="input-sm rounded-lg border-primary" 
+        required="" 
+        id="id_category_name"
+        _="
+        on focus 
+          set my @placeholder to ''
+        end
+        on keyup[key is 'Enter']
+          trigger click on the next .btn
+        end
+        on keyup[key is 'Escape']
+          set my value to '{{ category_name }}' then
+        end
+        "/>
       <input type="hidden" name="category_id" value="{{ category_id }}">
       <button class="btn btn-ghost" type="submit">
-        <img src="{% static 'svg/save_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
+        <img src="{% static 'svg/save_icon.svg' %}" class="max-w-[25px] max-h-[25px]">
       </button>
     </div>
   </form>
