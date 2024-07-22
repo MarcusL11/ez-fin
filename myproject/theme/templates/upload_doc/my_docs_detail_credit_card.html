@@ -7,12 +7,12 @@
   {% include "upload_doc/partials/my_docs_detail_cc_top_content.html" %}
 
   <div class="overflow-x-auto">
-    <table class="my-10 table table-xs">
+    <table 
+      class="my-10 table table-xs"
+      id="transaction_table">
       <thead>
         <tr>
-          <th>#</th>
           <th>
-            <!-- TODO: Add Hyperscript function to select all and deselect-->
             <label>
               <input type="checkbox" class="checkbox checkbox-xs"
                 _="
@@ -22,6 +22,7 @@
                 "/>
             </label>
           </th>
+          <th>#</th>
           <th>Bank</th>
           <th>Transaction Type</th>
           <th>Transaction Date</th>
@@ -31,11 +32,9 @@
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="transaction_table_body" name="transaction_table_body">
         {% for transaction in document.transaction_details.all %}
-        <!-- TODO: Convert Table Row into a Reusable Component -->
         <tr id="transaction_row_{{ transaction.id}}">
-          <td>{{ forloop.counter }}</td> 
           <td>
             {% if transaction.saved %}
             <input 
@@ -55,6 +54,7 @@
               "/>
             {% endif %}
           </td>
+          <td>{{ forloop.counter }}</td> 
           <td>{{ document.bank.name }}</td>
           <td>{{ document.transaction_type.name }}</td>
           <td>{{ transaction.transaction_date }}</td>
@@ -134,3 +134,13 @@
 </div>
 
 {% endblock %}
+{% block scripts %}
+  <script>
+    function copyTableToClipboard() {
+        var table = document.querySelector('table');
+        var rows = Array.from(table.rows);
+        var tsv = rows.map(row => Array.from(row.cells).slice(1).slice.(0,-1).map(cell => cell.textContent.trim()).join('\t')).join('\n');
+        navigator.clipboard.writeText(tsv);
+    }
+  </script>
+{% endblock scripts %}

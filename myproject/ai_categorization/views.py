@@ -4,9 +4,10 @@ from upload_doc.models import TransactionDetail, ExpenseCategory
 from django.http import HttpResponse
 
 
-def ai_categorize_modal(request):
+def ai_categorize(request):
     if request.method == "POST":
         transaction_ids = request.POST.getlist("transaction_ids")
+        print(f"Selected transactions: {transaction_ids}")
 
         if not transaction_ids:
             print("No transactions were selected")
@@ -14,7 +15,14 @@ def ai_categorize_modal(request):
 
         transactions = list(TransactionDetail.objects.filter(id__in=transaction_ids))
 
-        categories = ExpenseCategory.objects.all().exclude(name="credit card payment")
+        # Grabbing the related document, can be any transaction as its the same for all
+        document = transactions[0].document
+        print("Document ID: ", document.id)
+
+        # categories = ExpenseCategory.objects.all().exclude(name="credit card payment")
+        categories = ExpenseCategory.objects.all()
+
+        print("Fetching expense categories for transactions")
         result = fetch_expense(transactions, categories)
         category_mapping = {category.name: category for category in categories}
 
@@ -36,9 +44,11 @@ def ai_categorize_modal(request):
         # Use the updated list of transactions directly
         context = {
             "transactions": transactions,
+            "document": document,
         }
-        # TODO: Change Template
-        return render(request, "ai/partials/ai_categorize_modal.html", context=context)
+        return render(
+            request, "ai_categorization/partials/ai_categorize.html", context=context
+        )
 
     else:
         return HttpResponse(status=405)  # Method Not Allowed

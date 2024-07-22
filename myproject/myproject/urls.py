@@ -10,6 +10,7 @@ urlpatterns = [
     path("ai_categorization/", include("ai_categorization.urls")),
     path("category/", include("category.urls")),
     path("", include("landing.urls")),
+    path("", include("download_csv.urls")),
 ]
 
 # if not settings.TESTING:

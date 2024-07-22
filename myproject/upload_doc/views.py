@@ -151,6 +151,7 @@ def upload_doc(request):
                         "document": document,
                         "doc_type": doc_type,
                     }
+                    # TODO: Just redirect to the doc_detail
                     return render(
                         request,
                         "upload_doc/partials/upload_doc_get_result.html",

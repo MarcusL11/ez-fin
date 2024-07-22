@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "ai_categorization",
     "category",
     "landing",
+    "download_csv",
 ]
 
 TAILWIND_APP_NAME = "theme"

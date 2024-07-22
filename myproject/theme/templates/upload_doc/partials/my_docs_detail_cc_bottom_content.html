@@ -1,27 +1,46 @@
 <!-- BOTTOM CONTENT -->
 {% load static %}
 <div class="flex items-center space-x-1">
-  <!-- TODO: Add AI functionality to categorize -->
+  <!--  AI categorize Button -->
   <button 
-    type="submit" 
     class="btn btn-primary" 
-    hx-post=""
-    hx-target=""
-    hx-swap="innerHTML"
+    hx-post="{% url 'ai_categorize' %}"
+    hx-target="#transaction_table_body"
+    hx-swap="outerHTML"
     hx-trigger="click"
-    hx-vals=''>
+    hx-include="[name='transaction_table_body']"
+    _="
+      on click
+        set #ai-icon to .hidden then
+        remove .hidden from #loading-button
+      end
+      on htmx:afterSwap
+        set #loading-button to .hidden then
+        remove .hidden from #ai-icon
+      end
+    ">
     Categorize with
-    <img src="{% static 'svg/ai_icon.svg' %}" alt="">
+    <img
+      id="ai-icon" 
+      src="{% static 'svg/ai_icon.svg' %}" 
+      alt="ai icon" 
+      class="max-w-[25px] max-h-[25px]">
+    <span 
+      id="loading-button" 
+      class="hidden loading loading-dots loading-sm">
+    </span>
   </button>
-  <!--TODO: Add URL for function to copy -->
-  <a href="" class="block py-2.5 rounded">         
-    <button class="btn btn-primary">Copy Table
-    </button>
-  </a>
-  <!--TODO: Add URL for Document Download CSV -->
-  <a href="" class="block py-2.5 rounded">         
+  <!-- Copy to Clipboard Button -->
+  <button 
+    onclick="copyTableToClipboard()" 
+    class="btn btn-primary">Copy Table
+    <img src="{% static 'svg/copy_icon.svg' %}" alt="" class="max-w-[25px] max-h-[25px]">
+  </button>
+  <!-- Download CSV button-->
+  <a href="{% url 'download_csv' document.id %}" class="block py-2.5 rounded">         
     <button class="btn btn-primary">Download
-      <img src="{% static 'svg/csv_icon.svg' %}" alt="">
+      <img src="{% static 'svg/csv_icon.svg' %}" alt="" class="max-w-[25px] max-h-[25px]">
     </button>
   </a> 
 </div>
+

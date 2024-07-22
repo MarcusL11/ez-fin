@@ -78,21 +78,21 @@ def save_transaction_details(df, document):
         )
 
         # Create the sub-account if it doesn't already exist
-        sub_account_name = "SCB Credit Card Bill"
-        sub_account_instance, created = GLAccount.objects.get_or_create(
-            name=sub_account_name,
-            defaults={
-                "account_number": None,
-                "category": account_category_instance,
-                "description": "Description for SCB Credit Card Bill",
-                "parent_account": parent_gl_account_instance,
-            },
-        )
+        # sub_account_name = "SCB Credit Card Bill"
+        # sub_account_instance, created = GLAccount.objects.get_or_create(
+        #     name=sub_account_name,
+        #     defaults={
+        #         "account_number": None,
+        #         "category": account_category_instance,
+        #         "description": "Description for SCB Credit Card Bill",
+        #         "parent_account": parent_gl_account_instance,
+        #     },
+        # )
 
-        if created:
-            print(f"Sub-account '{sub_account_name}' created successfully.")
-        else:
-            print(f"Sub-account '{sub_account_name}' already exists.")
+        # if created:
+        #     print(f"Sub-account '{sub_account_name}' created successfully.")
+        # else:
+        #     print(f"Sub-account '{sub_account_name}' already exists.")
 
         for _, row in df.iterrows():
             TransactionDetail.objects.create(
@@ -107,8 +107,8 @@ def save_transaction_details(df, document):
                 foreign_currency=row.get("Foreign Currency"),
                 amount=row["Amount"],
                 expense_category=None,
-                account_category=account_category_instance,
-                gl_account=sub_account_instance,
+                account_category=None,
+                gl_account=None,
                 ending_balance=None,
                 saved=False,
             )
