@@ -1,51 +1,39 @@
-{% extends "landing_base.html" %}
-{% block content %}
-  <div class="text-center container justify-center mx-auto px-12">
-    <div class="mt-4"> 
-      <div class="mb-6 card border-2 border-primary rounded-3xl">
-        <div class="card-body">                
-          <h1 class="text-2xl font-bold">Email Verification Login</h1>
-          <div class="mt-6 mb-2"> 
-
-            <form 
-              method="post" 
-              hx-post="{% url 'sign_in' %}" 
-              hx-target="#result">
-              {% csrf_token %}
-              <div class="flex my-4 justify-center">
-                <input type="text" name="email" placeholder="Email" required class="input input-bordered w-1/2 max-w-xs">
-              </div>
-              <div class="mt-8 mb-4">
-                <button id="login-btn" type="submit" class="rounded hover:scale-105 btn btn-primary btn-xs sm:btn-sm md:btn-md lg:btn-lg">
-                  <span id="login-text">Login</span>
-                  <span id="loading-text" class="loading loading-dots loading-lg hidden"></span>
-                </button>                            
-              </div>
-              <div id="result"></div>
-            </form>
-
-          </div>
-        </div>
-      </div>
+<section id="sign-in" class="py-24 pt-24">
+  <div class="container mx-auto px-4">
+    <div class="flex-col text-center">
+      <h2 class="text-3xl font-bold text-center mb-8">Get Started</h2>
+      <p>You'll receive a secured log-in link</p>
     </div>
+    <form 
+      class="max-w-md mx-auto" 
+      hx-post="{% url 'sign_in' %}" 
+      hx-target="#sign-in-result"
+      hx-swap="innerHTML"
+      _="
+        on htmx:beforeRequest
+          add .hidden to #login-text then
+          remove .hidden from #loading-text
+        end
+        on htmx:afterRequest
+          add .hidden to #loading-text then
+          remove .hidden from #login-text
+        end
+      " 
+
+      {% csrf_token %}
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Email</span>
+        </label>
+        <input type="email" name="email" placeholder="your@email.com" class="input input-bordered" required />
+      </div>
+      <div class="form-control mt-6">
+        <button id="login-btn" class="btn btn-primary" type="submit">
+          <span id="login-text">Send Log-in Link</span>
+          <span id="loading-text" class="loading loading-dots loading-lg hidden"></span>
+        </button>
+      </div>
+      <div id="sign-in-result"></div>
+    </form>
   </div>
-
-  <!-- TODO: Convert this function into hyperscript on the button -->
-  <script>
-document.body.addEventListener('htmx:beforeRequest', function(event) {
-  if (event.target === document.querySelector('form')) {
-    document.getElementById('login-text').classList.add('hidden');
-    document.getElementById('loading-text').classList.remove('hidden');
-  }
-});
-
-document.body.addEventListener('htmx:afterRequest', function(event) {
-  if (event.target === document.querySelector('form')) {
-    document.getElementById('loading-text').classList.add('hidden');
-    document.getElementById('login-btn').classList.add('hidden');
-  }
-});
-  </script>
-
-  {% endblock content %}
-
+</section>

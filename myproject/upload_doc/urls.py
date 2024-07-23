@@ -10,3 +10,9 @@ urlpatterns = [
         name="my_docs_detail",
     ),
 ]
+
+htmx_urlpatterns = [
+    path("pagination_view/", views.pagination_view, name="pagination_view"),
+]
+
+urlpatterns += htmx_urlpatterns

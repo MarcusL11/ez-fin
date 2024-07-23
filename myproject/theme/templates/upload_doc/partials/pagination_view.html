@@ -1,7 +1,5 @@
-{% extends "../dashboard/dashboard_base.html" %}
 {% load static %}
 {% load humanize %}
-{% block main %}
 <div id="pagination_view_result" class="my-2 flex-col min-h-screen">
   <!-- include Top Content -->
   {% include "upload_doc/partials/my_docs_detail_cc_top_content.html" %}
@@ -17,7 +15,7 @@
               <input type="checkbox" class="checkbox checkbox-xs"
                 _="
                 on click
-                  set .checkbox.checked to my.checked
+                set .checkbox.checked to my.checked
                 end
                 "/>
             </label>
@@ -85,14 +83,14 @@
                 class="input input-bordered input-sm w-full max-w-xs"
                 _="
                 on focus 
-                  set my @placeholder to ''
+                set my @placeholder to ''
                 end
                 on keyup[key is 'Enter']
-                  trigger click on the next .btn
+                trigger click on the next .btn
                 end
-                  on keyup[key is 'Escape']
-                  set my value to '{{ transaction.expense_category.name }}' then
-                  trigger click on the next .btn
+                on keyup[key is 'Escape']
+                set my value to '{{ transaction.expense_category.name }}' then
+                trigger click on the next .btn
                 end
                 "/>
               <input 
@@ -129,45 +127,38 @@
 
 
 </div>
+<script>
+  function copyTableToClipboard() {
+    var table = document.querySelector('table');
+    var rows = Array.from(table.rows);
+    var tsv = rows.map(row => 
+      Array.from(row.cells).slice(1, -1).map(cell => cell.textContent.trim()).join('\t')
+    ).join('\n');
+    navigator.clipboard.writeText(tsv);
+  }
 
-{% endblock %}
-{% block scripts %}
-  <script>
-    function copyTableToClipboard() {
-        var table = document.querySelector('table');
-        var rows = Array.from(table.rows);
-        var tsv = rows.map(row => 
-            Array.from(row.cells).slice(1, -1).map(cell => cell.textContent.trim()).join('\t')
-        ).join('\n');
-        navigator.clipboard.writeText(tsv);
+  document.addEventListener('DOMContentLoaded', function() {
+    // Select all checkboxes
+    var checkboxes = document.querySelectorAll('.checkbox');
+    // Select the button
+    var aiButton = document.getElementById('ai-button');
+
+    // Function to check if any checkbox is checked
+    function checkCheckboxes() {
+      var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+      if (anyChecked) {
+        aiButton.removeAttribute('disabled');
+      } else {
+        aiButton.setAttribute('disabled', true);
+      }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Select all checkboxes
-        var checkboxes = document.querySelectorAll('.checkbox');
-        // Select the button
-        var aiButton = document.getElementById('ai-button');
-
-        // Function to check if any checkbox is checked
-        function checkCheckboxes() {
-            var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-            if (anyChecked) {
-                aiButton.removeAttribute('disabled');
-            } else {
-                aiButton.setAttribute('disabled', true);
-            }
-        }
-
-        // Add change event listener to each checkbox
-        checkboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', checkCheckboxes);
-        });
-
-        // Initial check
-        checkCheckboxes();
+    // Add change event listener to each checkbox
+    checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', checkCheckboxes);
     });
-  </script>
-  
-  
 
-{% endblock scripts %}
+    // Initial check
+    checkCheckboxes();
+  });
+</script>

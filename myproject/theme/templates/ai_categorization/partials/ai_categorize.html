@@ -1,7 +1,7 @@
 {% load static %}
 {% load humanize %} 
 <tbody id="transaction_table_body" name="transaction_table_body">
-  {% for transaction in document.transaction_details.all %}
+  {% for transaction in page_obj %}
   <tr id="transaction_row_{{ transaction.id}}">
     <td>
       {% if transaction.saved %}

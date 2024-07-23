@@ -2,6 +2,7 @@ from django.shortcuts import render
 from utilities.open_ai.chat_completion import fetch_expense
 from upload_doc.models import TransactionDetail, ExpenseCategory
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 
 def ai_categorize(request):
@@ -18,6 +19,15 @@ def ai_categorize(request):
         # Grabbing the related document, can be any transaction as its the same for all
         document = transactions[0].document
         print("Document ID: ", document.id)
+
+        # pagination
+        transactions = document.transaction_details.all()
+        paginator = Paginator(transactions, 10)
+        page_number = request.GET.get(
+            "page", 1
+        )  # TODO: Ensure previous post request sends page number
+        page_obj = paginator.get_page(page_number)
+        print("Page Number: " + str(page_number))  #
 
         # categories = ExpenseCategory.objects.all().exclude(name="credit card payment")
         categories = ExpenseCategory.objects.all()
@@ -45,6 +55,7 @@ def ai_categorize(request):
         context = {
             "transactions": transactions,
             "document": document,
+            "page_obj": page_obj,
         }
         return render(
             request, "ai_categorization/partials/ai_categorize.html", context=context

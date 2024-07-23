@@ -4,24 +4,26 @@
 
 <!DOCTYPE html>
 <html data-theme="dark" lang="en">
-   <head>
-       <title></title>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% tailwind_css %}
+    <script src="{% static 'js/dist/hyperscript.min.js' %}"></script>
+    <script src="{% static 'js/dist/htmx.min.js' %}" defer></script> 
+  </head> 
 
-       {% tailwind_css %}
-       <!--  ///_hyperscript library https://unpkg.com/hyperscript.org@0.9.12/dist/_hyperscript.min.js -->
-       <script src="{% static 'js/dist/hyperscript.min.js' %}"></script>
-       <!-- htmx library https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js -->
-       <script src="{% static 'js/dist/htmx.min.js' %}" defer></script> 
-   </head> 
-    <header class="max-w-screen-xl mx-auto px-4 container">
-      {% include '_header.html' %}
+  <body class="min-h-screen flex flex-col" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <header class="navbar sticky top-0 z-50">
+      {% include 'landing_header.html' %}
     </header>
 
-    <body class="font-body" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-      {% block main %}{% endblock main %}
-      {% block content %} {% endblock content %}
-    </body>
+    {% block main %}{% endblock main %}
+    {% block content %} {% endblock content %}
+    <footer class="footer footer-center p-4 text-base-content">
+      {% include 'landing_footer.html' %}
+    </footer>
+  </body>
+
+
 </html>

@@ -1,0 +1,21 @@
+<div
+  class="navbar"
+  _="
+    on click of a[href^='#'] 
+      call event.preventDefault() 
+      get the @href of it
+      smoothly scroll to #{it} 
+      adjust the scroll position by -80px
+    end
+    ">
+  <div class="navbar-start">
+    <a href="{% url 'home' %}" class="btn btn-ghost normal-case text-xl">EZFin</a>
+  </div>
+  <div class="navbar-end">
+    <a href="#introduction" class="btn btn-ghost">Introduction</a>
+    <a href="#how-it-works" class="btn btn-ghost">How It Works</a>
+    <a href="#dashboard" class="btn btn-ghost">Dashboard</a>
+    <a href="#pricing" class="btn btn-ghost">Pricing</a>
+    <a href="#sign-in" class="btn btn-primary">Get Started</a>
+  </div>
+</div>

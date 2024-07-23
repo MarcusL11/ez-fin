@@ -16,6 +16,7 @@ from utilities.amazon_textract.amz_textract_scb_bs import (
 import time
 from .models import Document, TransactionType
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 
 def my_docs(request):
@@ -32,10 +33,18 @@ def my_docs_detail(request, pk=None, transaction_type_slug=None):
         )
         print("transaction_type_slug: " + str(transaction_type.slug))
 
+        transactions = document.transaction_details.all()
+
+        paginator = Paginator(transactions, 10)
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+        print("Page Number: " + str(page_number))
+
         if transaction_type.slug == "credit-card":
             print("Credit Card Template was accessed")
             context = {
                 "document": document,
+                "page_obj": page_obj,
             }
             return render(
                 request, "upload_doc/my_docs_detail_credit_card.html", context
@@ -44,6 +53,7 @@ def my_docs_detail(request, pk=None, transaction_type_slug=None):
             print("Bank Statement Template was accessed")
             context = {
                 "document": document,
+                "page_obj": page_obj,
             }
             return render(request, "upload_doc/my_docs_detail_bs.html", context)
         else:
@@ -51,6 +61,35 @@ def my_docs_detail(request, pk=None, transaction_type_slug=None):
 
     else:
         return HttpResponseForbidden("Forbidden")
+
+
+# TODO: Change this to be a view with parameters to define the page number and the document id
+def pagination_view(request):
+    if request.method == "POST":
+        request_next_page_number = request.POST.get("next_page_number")
+        request_previous_page_number = request.POST.get("previous_page_number")
+        doucment_id = request.POST.get("document_id")
+
+        print("Next page number: ", request_next_page_number)
+        print("Previous page number: ", request_previous_page_number)
+        print("Document ID: ", doucment_id)
+
+        document = Document.objects.get(pk=doucment_id)
+        transactions = document.transaction_details.all()
+
+        paginator = Paginator(transactions, 10)
+
+        if request_next_page_number is not None:
+            page_obj = paginator.get_page(request_next_page_number)
+        else:
+            page_obj = paginator.get_page(request_previous_page_number)
+
+        context = {
+            "document": document,
+            "transactions": transactions,
+            "page_obj": page_obj,
+        }
+        return render(request, "upload_doc/partials/pagination_view.html", context)
 
 
 def upload_doc(request):
