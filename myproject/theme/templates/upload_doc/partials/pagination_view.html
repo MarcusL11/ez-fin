@@ -1,6 +1,26 @@
 {% load static %}
 {% load humanize %}
-<div id="pagination_view_result" class="my-2 flex-col min-h-screen">
+<div 
+  id="pagination_view_result" 
+  class="my-2 flex-col min-h-screen"
+  _="
+    def checkCheckboxes()
+      set anyChecked to false
+      for checkbox in <input.checkbox/> 
+        if checkbox.checked
+          set anyChecked to true
+          break
+        end
+      end
+      if anyChecked
+        remove @disabled from #ai-button
+      else
+        set #ai-button@disabled to true
+      end
+    end
+    on load checkCheckboxes()
+  "
+>
   <!-- include Top Content -->
   {% include "upload_doc/partials/my_docs_detail_cc_top_content.html" %}
 
@@ -15,7 +35,10 @@
               <input type="checkbox" class="checkbox checkbox-xs"
                 _="
                 on click
-                set .checkbox.checked to my.checked
+                  set .checkbox.checked to my.checked
+                end
+                on change 
+                  call checkCheckboxes()
                 end
                 "/>
             </label>
@@ -46,8 +69,11 @@
               value="{{ transaction.id }}"
               _="
               on load 
-              set my.checked to false
-              end 
+                set my.checked to false
+              end
+              on change 
+                call checkCheckboxes()
+              end
               "/>
             {% endif %}
           </td>
@@ -121,44 +147,8 @@
       </tbody>
     </table>
   </div>
-
   <!-- Bottom content --> 
   {% include "upload_doc/partials/my_docs_detail_cc_bottom_content.html" %}
 
-
 </div>
-<script>
-  function copyTableToClipboard() {
-    var table = document.querySelector('table');
-    var rows = Array.from(table.rows);
-    var tsv = rows.map(row => 
-      Array.from(row.cells).slice(1, -1).map(cell => cell.textContent.trim()).join('\t')
-    ).join('\n');
-    navigator.clipboard.writeText(tsv);
-  }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // Select all checkboxes
-    var checkboxes = document.querySelectorAll('.checkbox');
-    // Select the button
-    var aiButton = document.getElementById('ai-button');
-
-    // Function to check if any checkbox is checked
-    function checkCheckboxes() {
-      var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-      if (anyChecked) {
-        aiButton.removeAttribute('disabled');
-      } else {
-        aiButton.setAttribute('disabled', true);
-      }
-    }
-
-    // Add change event listener to each checkbox
-    checkboxes.forEach(function(checkbox) {
-      checkbox.addEventListener('change', checkCheckboxes);
-    });
-
-    // Initial check
-    checkCheckboxes();
-  });
-</script>
