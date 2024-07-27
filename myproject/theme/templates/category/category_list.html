@@ -18,9 +18,9 @@
       <ul class="space-y-2">
         {% for category in categories %}
         <li 
-          class="flex justify-between items-center bg-base-300 p-2 rounded"
+          class="flex justify-between items-center p-2 rounded"
           id="category_list_{{ category.id }}">
-          <span class="text-white">{{ category.name }}</span>
+          <span>{{ category.name }}</span>
           <div class="flex items-center space-x-2">
             <!--Edit Button-->
             <button 
@@ -55,13 +55,28 @@
       </ul>
       <!--Add Category Button-->
       <!-- TODO: Turn into a Componenet URL is the parameter-->
+      <button 
+        class="btn btn-sm btn-primary"
+        _="
+          on click
+            remove .hidden from #add_category_form then
+            add .hidden on me
+          end
+        ">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+        Add Category
+      </button>
+
       <form 
+        id="add_category_form"
         method="POST"
         hx-post="{% url 'add_category_list' %}" 
         hx-trigger="submit" 
         hx-target="#category_list"
         hx-swap="innerHTML"
-        class="">
+        class="hidden">
         {% csrf_token %}
         <div class="flex items-center space-x-1">
           <input 

@@ -158,69 +158,37 @@
 
 {% endblock %}
 {% block scripts %}
-  <!-- <script> -->
-  <!---->
-  <!--   document.addEventListener('DOMContentLoaded', function() { -->
-  <!---->
-  <!--       document.addEventListener('change', function(event) { -->
-  <!--           if (event.target.matches('.checkbox')) { -->
-  <!--               checkCheckboxes(); -->
-  <!--           } -->
-  <!--       }); -->
-  <!---->
-  <!--       document.body.addEventListener('htmx:afterSwap', function(event) { -->
-  <!--           initializeCheckboxes(); -->
-  <!--       }); -->
-  <!---->
-  <!--       var aiButton = document.getElementById('ai-button'); -->
-  <!---->
-  <!--       function checkCheckboxes() { -->
-  <!--           var checkboxes = document.querySelectorAll('.checkbox'); -->
-  <!--           var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked); -->
-  <!--           if (anyChecked) { -->
-  <!--               aiButton.removeAttribute('disabled'); -->
-  <!--           } else { -->
-  <!--               aiButton.setAttribute('disabled', true); -->
-  <!--           } -->
-  <!--       } -->
-  <!---->
-  <!--       function copyTableToClipboard() { -->
-  <!--           var table = document.querySelector('table'); -->
-  <!--           var rows = Array.from(table.rows); -->
-  <!--           var tsv = rows.map(row =>  -->
-  <!--               Array.from(row.cells).slice(1, -1).map(cell => cell.textContent.trim()).join('\t') -->
-  <!--           ).join('\n'); -->
-  <!--           navigator.clipboard.writeText(tsv); -->
-  <!--       } -->
-  <!---->
-  <!--       function initializeCheckboxes() { -->
-  <!--           var checkboxes = document.querySelectorAll('.checkbox'); -->
-  <!--           var aiButton = document.getElementById('ai-button'); -->
-  <!---->
-  <!--           function checkCheckboxes() { -->
-  <!--               var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked); -->
-  <!--               if (anyChecked) { -->
-  <!--                   aiButton.removeAttribute('disabled'); -->
-  <!--               } else { -->
-  <!--                   aiButton.setAttribute('disabled', true); -->
-  <!--               } -->
-  <!--           } -->
-  <!---->
-  <!--           checkboxes.forEach(function(checkbox) { -->
-  <!--               checkbox.addEventListener('change', checkCheckboxes); -->
-  <!--           }); -->
-  <!---->
-  <!--           checkCheckboxes(); -->
-  <!--       } -->
-  <!---->
-  <!--       checkCheckboxes(); -->
-  <!--   }); -->
-  <!---->
-  <!---->
-  <!-- </script> -->
-  
+
+<script>
+    function copyTableToClipboard() {
+        var table = document.querySelector('table');
+        var rows = Array.from(table.rows);
+        var tsv = rows.map(row => 
+            Array.from(row.cells).slice(1, -1).map(cell => cell.textContent.trim()).join('\t')
+        ).join('\n');
+        navigator.clipboard.writeText(tsv);
+    }
+
+    function initializeCopyButton() {
+        var copyButton = document.querySelector('#copy-button');
+        if (copyButton) {
+            copyButton.removeEventListener('click', copyTableToClipboard); // Prevent multiple bindings
+            copyButton.addEventListener('click', copyTableToClipboard);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeCopyButton();
+    });
+
+    document.body.addEventListener('htmx:afterSwap', function() {
+        initializeCopyButton();
+    });
+</script>
 
 
-  
 
-{% endblock scripts %}
+
+
+
+  {% endblock scripts %}

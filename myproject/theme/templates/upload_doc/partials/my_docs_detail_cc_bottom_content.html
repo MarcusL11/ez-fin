@@ -35,13 +35,31 @@
   </button>
   <!-- Copy to Clipboard Button -->
   <button 
+    id="copy-button" 
     onclick="copyTableToClipboard()" 
-    class="btn btn-primary">Copy Table
+    class="btn btn-primary"
+    _="
+    on click
+      put 'Copied!' into me
+      wait 2s
+      put 'Copy Table' into me
+    end
+    ">
+    Copy Table
     <img src="{% static 'svg/copy_icon.svg' %}" alt="" class="max-w-[25px] max-h-[25px]">
   </button>
   <!-- Download CSV button-->
   <a href="{% url 'download_csv' document.id %}" class="block py-2.5 rounded">         
-    <button class="btn btn-primary">Download
+    <button 
+      class="btn btn-primary"
+      _="
+      on click
+        put 'Downloaded!' into me
+        wait 2s
+        put 'Download' into me
+      end
+      ">
+      Download
       <img src="{% static 'svg/csv_icon.svg' %}" alt="" class="max-w-[25px] max-h-[25px]">
     </button>
   </a> 

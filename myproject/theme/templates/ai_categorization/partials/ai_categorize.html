@@ -55,14 +55,14 @@
           class="input input-bordered input-sm w-full max-w-xs"
           _="
           on focus 
-          set my @placeholder to ''
+            set my @placeholder to ''
           end
           on keyup[key is 'Enter']
-          trigger click on the next .btn
+            trigger click on the next .btn
           end
           on keyup[key is 'Escape']
-          set my value to '{{ transaction.expense_category.name }}' then
-          trigger click on the next .btn
+            set my value to '{{ transaction.expense_category.name }}' then
+            trigger click on the next .btn
           end
           "/>
         <input 
