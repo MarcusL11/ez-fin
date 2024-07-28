@@ -8,12 +8,16 @@
       add .animate-slide-in to .mascot">
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
         <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
-          <h1 class="text-5xl font-bold mb-6">Convert Your Credit Card Statements into CSV File</h1>
-          <p class="text-xl mb-8">EZFin extracts data from your Thai bank and credit card statements, providing you with editable CSV files and powerful financial management platform.</p>
-          <button class="btn btn-primary">Try EZFin Now</button>
+          <h1 class="text-5xl font-bold mb-6">Convert PDF Bank Statements to CSV</h1>
+          <p class="text-xl mb-8">EZFin extracts data from your credit card and bank statements, returning you with an editable CSV.</p>
+          {% if user.is_authenticated and user.has_verified_email %}
+            <a href="{% url 'upload_doc' %}"><button class="btn btn-primary">Try Now!</button></a>
+          {% else %}
+            <a href="#sign-in"><button class="btn btn-primary">Try Now!</button></a>
+          {% endif %}
         </div>
         <div class="mascot w-full md:w-1/2 mt-8 md:mt-0 transform translate-x-full transition-all duration-1000">
-          <img src="" alt="" class="mx-auto">
+          <img src="{% static 'image/hero-image.jpg' %}" alt="" class="mx-auto rounded-xl border-4 border-primary shadow-lg shadow-white">
         </div>
       </div>
     </section>
@@ -26,35 +30,15 @@
         <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
           <h2 class="text-3xl font-bold mb-6">How Does It Work?</h2>
           <ol class="list-decimal list-inside space-y-4">
-            <li>Upload your Thai bank or credit card statement</li>
-            <li>Our AI extracts all relevant financial data</li>
+            <li>Upload your PDF Statements.</li>
+            <li>We extract and return the relevent data.</li>
+            <li>Use AI to categorize each transactions.</li>
             <li>Download your data in an editable CSV format</li>
-            <li>Import into your preferred financial software</li>
           </ol>
+          <button class="mt-8 btn btn-primary">Try Now!</button>
         </div>
-        <div class="mascot w-full md:w-1/2 mt-8 md:mt-0 transform -translate-x-full transition-all duration-1000">
-          <img src="https://via.placeholder.com/400" alt="How It Works Mascot" class="mx-auto">
-        </div>
-      </div>
-    </section>
-
-    <section id="dashboard" class="py-16 pt-24"
-      _="on intersection(intersecting) having threshold 0.2
-      add .animate-fade-in to .content
-      add .animate-slide-in to .mascot">
-      <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
-        <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
-          <h2 class="text-3xl font-bold mb-6">Personal Finance Dashboard</h2>
-          <p class="text-xl mb-6">With EZFin Pro, get access to a powerful dashboard that helps you:</p>
-          <ul class="list-disc list-inside space-y-2">
-            <li>Track your income and expenses</li>
-            <li>Visualize your spending habits</li>
-            <li>Set and monitor financial goals</li>
-            <li>Receive real-time updates on your transactions</li>
-          </ul>
-        </div>
-        <div class="mascot w-full md:w-1/2 mt-8 md:mt-0 transform translate-x-full transition-all duration-1000">
-          <img src="https://via.placeholder.com/400" alt="Dashboard Mascot" class="mx-auto">
+        <div class="">
+          <img src="{% static 'svg/document_scan.svg'%}" alt="How It Works Mascot" class="mx-auto">
         </div>
       </div>
     </section>
@@ -68,27 +52,27 @@
         <div class="pricing-cards flex flex-col md:flex-row justify-center items-center gap-8 opacity-0 transition-all duration-1000">
           <div class="card w-96 bg-base-300 shadow-xl">
             <div class="card-body">
-              <h3 class="card-title">Basic</h3>
+              <h3 class="card-title">FREE</h3>
               <p>Extract data from your statements and get CSV files.</p>
               <ul class="list-disc list-inside my-4">
-                <li>Unlimited statement uploads</li>
-                <li>CSV file downloads</li>
-                <li>Basic support</li>
+                <li>1 statement uploads and convert</li>
               </ul>
               <div class="card-actions justify-end">
-                <button class="btn btn-primary">Choose Basic</button>
+                {% if user.is_authenticated and user.has_verified_email %}
+                  <a href="{% url 'upload_doc' %}"><button class="btn btn-primary">Try Now!</button></a>
+                {% else %}
+                  <a href="{% url 'sign_in' %}"><button class="btn btn-primary">Try Now!</button></a>
+                {% endif %}
               </div>
             </div>
           </div>
           <div class="card w-96 bg-primary text-primary-content shadow-xl">
             <div class="card-body">
               <h3 class="card-title">EZFin Pro</h3>
-              <p>Full financial management suite with dashboard and real-time updates.</p>
+              <p>Basic + AI Auto-Categorization </p>
               <ul class="list-disc list-inside my-4">
-                <li>All Basic features</li>
-                <li>Personal finance dashboard</li>
-                <li>Real-time transaction updates</li>
-                <li>Advanced financial insights</li>
+                <li>20 Uploads and extractions per month</li>
+                <li>GSheets and Excel templates</li>
                 <li>Priority support</li>
               </ul>
               <div class="card-actions justify-end">
@@ -97,13 +81,25 @@
             </div>
           </div>
         </div>
-        <div class="mascot mt-12 text-center">
-          <img src="https://via.placeholder.com/200" alt="Pricing Mascot" class="mx-auto">
-        </div>
       </div>
     </section>
 
     {% include 'accounts/sign_in.html' %}
+
+    <section id="FAQ" class="py-16  pt-24"
+      _="on intersection(intersecting) having threshold 0.2
+      add .animate-fade-in to .faq-modal">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2>
+        <div class="collapse collapse-arrow bg-base-200">
+          <input type="radio" name="my-accordion-2" checked="checked"/>
+          <div class="collapse-title text-xl font-medium">Question 1</div>
+          <div class="collapse-content">
+            <p>hello</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
   </main>
 

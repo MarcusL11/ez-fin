@@ -38,7 +38,7 @@ class SendSignInEmail(View):
         if not request.user.is_anonymous and request.user.has_verified_email:
             return redirect("dashboard")
         form = CreateUserForm()
-        return render(request, "accounts/sign_in.html", {"form": form})
+        return render(request, "accounts/sign_in_redirect.html", {"form": form})
 
     def post(self, request: HttpRequest) -> HttpResponse:
         data = {
