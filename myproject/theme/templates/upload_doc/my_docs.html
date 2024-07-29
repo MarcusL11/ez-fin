@@ -2,7 +2,6 @@
 {% load static %}
 {% block main %}
 <section>
-  
   <div>
     <header class="mb-2">
       <h2 class="text-2xl font-semibold">My Documents</h2>
@@ -63,7 +62,7 @@
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="document_table_body" name="document_table_body">
       {% for document in documents %}
         <!-- row 1 -->
           <tr>
@@ -71,6 +70,8 @@
               <label>
                 <input type="checkbox" 
                 class="checkbox checkbox-xs"
+                name="document_ids"
+                value="{{ document.pk }}"
                 _="
                   on change
                     call checkCheckboxes()
@@ -104,7 +105,17 @@
     </table>
   </div>
   <div class="my-4">
-    <button id="delete-button" class="btn btn-primary" disable>Delete</button>
+    <button 
+      id="delete-button" 
+      class="btn btn-primary" 
+      disable
+      hx-post="{% url 'delete_doc' %}"
+      hx-swap="outerHTML"
+      hx-target="#document_table_body"
+      hx-include="#document_table_body"
+    >
+      Delete
+    </button>
   </div>
 
 

@@ -1,0 +1,40 @@
+<tbody id="document_table_body" name="document_table_body">
+  {% for document in documents %}
+  <!-- row 1 -->
+  <tr>
+    <td>
+      <label>
+        <input type="checkbox" 
+          class="checkbox checkbox-xs"
+          name="document_ids"
+          value="{{ document.pk }}"
+          _="
+          on change
+          call checkCheckboxes()
+          end
+          "/>
+      </label>
+    </td>
+    <td>
+      <div class="font-bold">{{ forloop.counter }}</div>
+    </td>
+    <td>
+      <div>
+        <div class="font-bold">{{ document.name }}</div>
+        <div class="text-xs opacity-50">Uploaded at: {{ document.date_uploaded|date:"M j, y"}}</div>
+      </div>
+    </td>
+    <td>
+      <div class="font-bold">{{ document.bank.name }}</div>
+    </td>
+    <td>
+      <div class="font-bold">{{ document.transaction_type.name }}</div>
+    </td>
+    <td>
+      <a href="{% url 'my_docs_detail' document.pk document.transaction_type.slug %}">
+        <button class="btn btn-primary">View</button>
+      </a>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>

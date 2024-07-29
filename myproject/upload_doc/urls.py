@@ -13,6 +13,7 @@ urlpatterns = [
 
 htmx_urlpatterns = [
     path("pagination_view/", views.pagination_view, name="pagination_view"),
+    path("delete_doc/", views.delete_doc, name="delete_doc"),
 ]
 
 urlpatterns += htmx_urlpatterns
