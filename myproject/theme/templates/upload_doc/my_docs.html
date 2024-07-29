@@ -9,14 +9,43 @@
     </header>
   </div>
 
-  <div class="border-2 border-primary rounded-xl overflow-x-auto">
+  <div 
+    class="border-2 border-primary rounded-xl overflow-x-auto"
+    _="
+      def checkCheckboxes()
+        set anyChecked to false
+        for checkbox in <input.checkbox/> 
+          if checkbox.checked
+            set anyChecked to true
+            break
+          end
+        end
+        if anyChecked
+          remove @disabled from #delete-button
+        else
+          set #delete-button @disabled to true
+        end
+      end
+      on load checkCheckboxes()
+    "
+  >
     <table class="table">
       <!-- head -->
       <thead>
         <tr>
           <th>
             <label>
-              <input type="checkbox" class="checkbox" />
+              <input 
+                type="checkbox" 
+                class="checkbox checkbox-xs"
+                _="
+                on click
+                  set .checkbox.checked to my.checked
+                end
+                on change 
+                  call checkCheckboxes()
+                end
+                "/>
             </label>
           </th>
           <th>#</th>
@@ -32,7 +61,8 @@
           <tr>
             <td>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input type="checkbox" 
+                class="checkbox checkbox-xs" />
               </label>
             </td>
             <td>
@@ -60,6 +90,10 @@
       </tbody>
     </table>
   </div>
+  <div class="my-4">
+    <button id="delete-button" class="btn btn-primary" disable>Delete</button>
+  </div>
+
 
 </section>
 {% endblock %}

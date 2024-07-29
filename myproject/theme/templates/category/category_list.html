@@ -4,12 +4,29 @@
 {% block js %}{% endblock js %}
 {% block css %} {% endblock css%}
 {% block main %}
-<section class="max-w-sm flex-col items-center min-h-screen">
-  <div>
-    <header class="mb-2">
-      <h2 class="text-2xl font-semibold">Category</h2>
-    </header>
+
+<section class="max-w-xl flex-col items-center">
+  <header class="mb-2">
+    <h2 class="text-2xl font-semibold">Category</h2>
+  </header>
+  <div class="my-4">
+    <div role="alert" class="alert alert-info">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="h-6 w-6 shrink-0 stroke-current">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <span>The categories will be used by AI auto categorization features.  Best to avoid misspelled words and repeatitive categories. </span>
+    </div>
   </div>
+</section>
+<section class="max-w-sm flex-col items-center min-h-screen">
 
   <div class="card border-2 border-primary w-full justify-center mx-auto">
     <div 

@@ -9,7 +9,7 @@
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
         <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
           <h1 class="text-5xl font-bold mb-6">Convert PDF Bank Statements to CSV</h1>
-          <p class="text-xl mb-8">EZFin extracts data from your credit card and bank statements, returning you with an editable CSV.</p>
+          <p class="text-xl mb-8">BahtBytes extracts data from your credit card and bank statements, returning you with an editable CSV.</p>
           {% if user.is_authenticated and user.has_verified_email %}
             <a href="{% url 'upload_doc' %}"><button class="btn btn-primary">Try Now!</button></a>
           {% else %}
@@ -55,7 +55,7 @@
               <h3 class="card-title">FREE</h3>
               <p>Extract data from your statements and get CSV files.</p>
               <ul class="list-disc list-inside my-4">
-                <li>1 statement uploads and convert</li>
+                <li>1 document upload and convert</li>
               </ul>
               <div class="card-actions justify-end">
                 {% if user.is_authenticated and user.has_verified_email %}
@@ -68,11 +68,11 @@
           </div>
           <div class="card w-96 bg-primary text-primary-content shadow-xl">
             <div class="card-body">
-              <h3 class="card-title">EZFin Pro</h3>
-              <p>Basic + AI Auto-Categorization </p>
+              <h3 class="card-title">BahtBytes Pro</h3>
+              <p>Free + AI Auto-Categorization </p>
               <ul class="list-disc list-inside my-4">
                 <li>20 Uploads and extractions per month</li>
-                <li>GSheets and Excel templates</li>
+                <li>GSheets and Excel template</li>
                 <li>Priority support</li>
               </ul>
               <div class="card-actions justify-end">
@@ -86,20 +86,26 @@
 
     {% include 'accounts/sign_in.html' %}
 
-    <section id="FAQ" class="py-16  pt-24"
-      _="on intersection(intersecting) having threshold 0.2
-      add .animate-fade-in to .faq-modal">
-      <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2>
-        <div class="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-2" checked="checked"/>
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>hello</p>
+    <section id="faq" class="py-16  pt-24">
+       <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2> 
+        <div class="join join-vertical w-full">
+          <div 
+            class="collapse collapse-arrow join-item border-base-300 border" 
+            _="
+            on click 
+              toggle .collapse-open on me
+            end
+            ">
+            <div class="collapse-title text-xl font-medium">Click to open this one and close others</div>
+            <div class="collapse-content">
+              <p>hello</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
+
 
   </main>
 
