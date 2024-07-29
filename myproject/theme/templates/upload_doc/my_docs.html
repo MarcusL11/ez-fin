@@ -14,19 +14,26 @@
     _="
       def checkCheckboxes()
         set anyChecked to false
-        for checkbox in <input.checkbox/> 
+        for checkbox in <tbody input.checkbox/>
           if checkbox.checked
             set anyChecked to true
             break
           end
         end
-        if anyChecked
-          remove @disabled from #delete-button
-        else
+        
+        if not anyChecked
+          if #select-all-checkbox.checked
+            set #select-all-checkbox.checked to false
+          end
           set #delete-button @disabled to true
+        else
+          remove @disabled from #delete-button
         end
       end
-      on load checkCheckboxes()
+
+      on load
+        checkCheckboxes()
+      end
     "
   >
     <table class="table">
@@ -35,7 +42,8 @@
         <tr>
           <th>
             <label>
-              <input 
+              <input
+                id="select-all-checkbox"
                 type="checkbox" 
                 class="checkbox checkbox-xs"
                 _="
@@ -62,7 +70,12 @@
             <td>
               <label>
                 <input type="checkbox" 
-                class="checkbox checkbox-xs" />
+                class="checkbox checkbox-xs"
+                _="
+                  on change
+                    call checkCheckboxes()
+                  end
+                "/>
               </label>
             </td>
             <td>

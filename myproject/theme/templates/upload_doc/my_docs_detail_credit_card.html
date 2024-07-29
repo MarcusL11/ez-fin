@@ -8,19 +8,24 @@
   _="
     def checkCheckboxes()
       set anyChecked to false
-      for checkbox in <input.checkbox/> 
+      for checkbox in <tbody input.checkbox/> 
         if checkbox.checked
           set anyChecked to true
           break
         end
       end
-      if anyChecked
-        remove @disabled from #ai-button
+      if not anyChecked
+        if #select-all-checkbox.checked
+          set #select-all-checkbox.checked to false
+        end
+        set #ai-button @disabled to true
       else
-        set #ai-button@disabled to true
+        remove @disabled from #ai-button
       end
     end
-    on load checkCheckboxes()
+    on load 
+      checkCheckboxes()
+    end
   "
 >
   <!-- include Top Content -->
@@ -34,7 +39,7 @@
         <tr>
           <th>
             <label>
-              <input type="checkbox" class="checkbox checkbox-xs"
+              <input id="select-all-checkbox" type="checkbox" class="checkbox checkbox-xs"
                 _="
                 on click
                   set .checkbox.checked to my.checked

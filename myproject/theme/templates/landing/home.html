@@ -9,7 +9,8 @@
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
         <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
           <h1 class="text-5xl font-bold mb-6">Convert PDF Bank Statements to CSV</h1>
-          <p class="text-xl mb-8">BahtBytes extracts data from your credit card and bank statements, returning you with an editable CSV.</p>
+          <p class="text-xl mb-8">Does your bank not offer an option to download your statements in Excel or CSV? </p>
+          <p class="text-xl mb-8">BahtBytes extracts data from your credit card and bank statements, returning your data in CSV.</p>
           {% if user.is_authenticated and user.has_verified_email %}
             <a href="{% url 'upload_doc' %}"><button class="btn btn-primary">Try Now!</button></a>
           {% else %}
@@ -33,7 +34,7 @@
             <li>Upload your PDF Statements.</li>
             <li>We extract and return the relevent data.</li>
             <li>Use AI to categorize each transactions.</li>
-            <li>Download your data in an editable CSV format</li>
+            <li>Copy Paste the data into Excel or Download as a CSV file</li>
           </ol>
           <button class="mt-8 btn btn-primary">Try Now!</button>
         </div>
@@ -53,9 +54,10 @@
           <div class="card w-96 bg-base-300 shadow-xl">
             <div class="card-body">
               <h3 class="card-title">FREE</h3>
-              <p>Extract data from your statements and get CSV files.</p>
+              <p>Extract data from your statements and download as a CSV file.</p>
               <ul class="list-disc list-inside my-4">
-                <li>1 document upload and convert</li>
+                <li>1 document upload</li>
+                <li>1 AI Auto Categorization</li>
               </ul>
               <div class="card-actions justify-end">
                 {% if user.is_authenticated and user.has_verified_email %}
@@ -69,10 +71,10 @@
           <div class="card w-96 bg-primary text-primary-content shadow-xl">
             <div class="card-body">
               <h3 class="card-title">BahtBytes Pro</h3>
-              <p>Free + AI Auto-Categorization </p>
+              <p>Free + AI Auto-Categorization</p>
               <ul class="list-disc list-inside my-4">
-                <li>20 Uploads and extractions per month</li>
-                <li>GSheets and Excel template</li>
+                <li>100 uploads per month</li>
+                <li>Access to auto-categorization</li>
                 <li>Priority support</li>
               </ul>
               <div class="card-actions justify-end">
