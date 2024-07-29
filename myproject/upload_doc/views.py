@@ -21,11 +21,14 @@ import time
 from .models import Document, TransactionType
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.shortcuts import redirect
 
 
 def my_docs(request):
     if not request.user.is_anonymous and request.user.has_verified_email:
-        documents = Document.objects.all()
+        user = request.user
+        # get documents of user
+        documents = Document.objects.filter(user=user).all()
         context = {"documents": documents}
         return render(request, "upload_doc/my_docs.html", context)
     else:
@@ -35,8 +38,8 @@ def my_docs(request):
 def my_docs_detail(request, pk=None, transaction_type_slug=None):
     if request.method == "GET":
         if not request.user.is_anonymous and request.user.has_verified_email:
-            document = get_object_or_404(Document, pk=pk)
-            # TODO: check if the document belongs to the user.
+            user = request.user
+            document = get_object_or_404(Document, pk=pk, user=user)
 
             transaction_type = get_object_or_404(
                 TransactionType, slug=transaction_type_slug
@@ -79,6 +82,7 @@ def my_docs_detail(request, pk=None, transaction_type_slug=None):
 def pagination_view(request):
     if request.method == "POST":
         if not request.user.is_anonymous and request.user.has_verified_email:
+            user = request.user
             request_next_page_number = request.POST.get("next_page_number")
             request_previous_page_number = request.POST.get("previous_page_number")
             doucment_id = request.POST.get("document_id")
@@ -87,7 +91,7 @@ def pagination_view(request):
             print("Previous page number: ", request_previous_page_number)
             print("Document ID: ", doucment_id)
 
-            document = Document.objects.get(pk=doucment_id)
+            document = Document.objects.get(pk=doucment_id, user=user)
             transactions = document.transaction_details.all()
 
             paginator = Paginator(transactions, 10)
@@ -112,17 +116,17 @@ def pagination_view(request):
 def delete_doc(request):
     if request.method == "POST":
         if not request.user.is_anonymous and request.user.has_verified_email:
+            user = request.user
             document_ids = request.POST.getlist("document_ids")
             print("Document IDs: ", document_ids)
             for pk in document_ids:
                 try:
-                    document = get_object_or_404(Document, pk=pk)
+                    document = get_object_or_404(Document, pk=pk, user=user)
                     document.delete()
                 except Exception as e:
                     print("Error: " + str(e))
                     return HttpResponseNotFound("Document not found")
-            # TODO:: Users' document only
-            context = {"documents": Document.objects.all()}
+            context = {"documents": Document.objects.filter(user=user).all}
             return render(
                 request,
                 "upload_doc/partials/delete_doc.html",
@@ -137,6 +141,7 @@ def delete_doc(request):
 def upload_doc(request):
     if not request.user.is_anonymous and request.user.has_verified_email:
         form = UploadFileForm()
+        user = request.user
 
         if request.method == "POST":
             print("POST request received")
@@ -195,14 +200,17 @@ def upload_doc(request):
                 # add file type to file name
                 file_name = file_name + "." + file_type.split("/")[1]
 
+                # S3 file name
+                s3_file_name = str(user, "_", file_name)
+
                 print("Sanitize File Name: " + file_name)
                 print("Uploading file to S3")
-                success = upload_file_to_s3(file, bucket, file_name)
+                success = upload_file_to_s3(file, bucket, s3_file_name)
                 print("Upload status: " + str(success))
 
                 if success:
                     # if success, create a document variable that takes the file name
-                    job_id = start_document_analysis(file_name)
+                    job_id = start_document_analysis(s3_file_name)
                     print("Job ID: " + job_id)
 
                     # TODO: Change this to a better way of waiting for the job to complete
@@ -215,14 +223,17 @@ def upload_doc(request):
 
                         # Create a document object in the database
                         document, created = Document.objects.get_or_create(
-                            date_uploaded=timezone.now()
+                            date_uploaded=timezone.now(),
+                            user=user,
+                            file_name=file_name,
+                            s3_file_name=s3_file_name,
                         )
 
                         # Save the data to the all models with its relationships
                         try:
                             print("Saving data to models")
                             # TODO: Consider adding Bank Type as a parameter instead of hardcoding
-                            save_data_to_models(file_name, data_frames_dicts, document)
+                            save_data_to_models(data_frames_dicts, document)
 
                         except Exception as e:
                             print("Error: " + str(e))
@@ -234,12 +245,13 @@ def upload_doc(request):
                             "document": document,
                             "doc_type": doc_type,
                         }
-                        # TODO: Just redirect to the doc_detail
-                        return render(
-                            request,
-                            "upload_doc/partials/upload_doc_get_result.html",
-                            context=context,
+                        print("Redirecting to my_docs_detail")
+                        return redirect(
+                            "my_docs_detail",
+                            pk=document.pk,
+                            transaction_type_slug="credit-card",
                         )
+
                     elif doc_type == "Bank Statement":
                         # create a dataframe dic using get_doc_analysis_results_bs function and job_id as its parameter
                         data_frames_dicts = get_doc_analysis_results_bs(job_id)
@@ -249,7 +261,8 @@ def upload_doc(request):
 
                         # create the document
                         document, created = Document.objects.get_or_create(
-                            date_uploaded=timezone.now()
+                            date_uploaded=timezone.now(),
+                            user=user,
                         )
                         # Save the data to all models with its relationships
                         try:

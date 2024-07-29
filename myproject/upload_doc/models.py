@@ -1,4 +1,5 @@
 from django.db import models
+from accounts.models import CustomUser
 
 
 class Bank(models.Model):
@@ -44,8 +45,16 @@ class Document(models.Model):
     and all other details related to it
     """
 
-    # TODO: Add one-to-one with User
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="documents",
+        null=True,
+        blank=True,
+    )
     name = models.CharField(max_length=255, null=True, blank=True)
+
+    s3_file_name = models.CharField(max_length=255, null=True, blank=True)
 
     date_uploaded = models.DateTimeField(auto_now_add=True)
 
@@ -63,6 +72,7 @@ class Document(models.Model):
         null=True,
         blank=True,
     )
+    # TODO: Need to move the relationship to BalanceAndPayment model: Then Adjust the Textract writing to model code
     balance_and_payment = models.OneToOneField(
         "BalanceAndPayment",
         on_delete=models.CASCADE,
@@ -70,6 +80,7 @@ class Document(models.Model):
         null=True,
         blank=True,
     )
+    # TODO: Need to move the relationship to CreditCardSummary model: Then Adjust the Textract writing to model code
     credit_card_summary = models.OneToOneField(
         "CreditCardSummary",
         on_delete=models.CASCADE,

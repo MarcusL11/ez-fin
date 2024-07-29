@@ -12,14 +12,14 @@ from django.core.exceptions import ObjectDoesNotExist
 import pandas as pd
 
 
-def save_data_to_models(file_name, data_frames, document):
+def save_data_to_models(data_frames, document):
     credit_card_summary = save_credit_card_summary(data_frames["credit_card_summary"])
     balance_and_payment = save_balance_and_payment(data_frames["balance_and_payment"])
     save_transaction_details(data_frames["transaction_details"], document)
-    save_document(file_name, document, credit_card_summary, balance_and_payment)
+    save_document(document, credit_card_summary, balance_and_payment)
 
 
-def save_document(file_name, document, credit_card_summary, balance_and_payment):
+def save_document(document, credit_card_summary, balance_and_payment):
     # Ensure Bank instance
     bank_instance, _ = Bank.objects.get_or_create(name="SCB")
 
@@ -29,7 +29,6 @@ def save_document(file_name, document, credit_card_summary, balance_and_payment)
     )
 
     # Update the document fields
-    document.name = file_name
     document.bank = bank_instance
     document.transaction_type = transaction_type_instance
     document.credit_card_summary = credit_card_summary
