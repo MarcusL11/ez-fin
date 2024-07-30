@@ -11,6 +11,7 @@ urlpatterns = [
     path("category/", include("category.urls")),
     path("", include("landing.urls")),
     path("", include("download_csv.urls")),
+    path("", include("search_category.urls")),
 ]
 
 # if not settings.TESTING:

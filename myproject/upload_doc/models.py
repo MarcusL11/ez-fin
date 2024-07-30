@@ -34,10 +34,17 @@ class ExpenseCategory(models.Model):
 
     # TODO: Add one-to-one with User
 
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="expense_categories",
+        null=True,
+        blank=True,
+    )
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"Category: {self.name}"
+        return f"Category: {self.name} + User: {self.user}"
 
 
 class Document(models.Model):

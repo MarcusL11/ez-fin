@@ -1,6 +1,15 @@
 {% load static %}
 {% load humanize %} 
-<tbody id="transaction_table_body" name="transaction_table_body">
+<tbody 
+  id="transaction_table_body" 
+  name="transaction_table_body"
+  _="
+  on load
+    add .hidden to #loading-button then
+    remove .hidden from #ai-icon
+  end   
+  "
+>
   {% for transaction in page_obj %}
   <tr id="transaction_row_{{ transaction.id}}">
     <td>
@@ -17,7 +26,7 @@
         value="{{ transaction.id }}"
         _="
         on load 
-        set my.checked to true
+          set my.checked to false
         end 
         "/>
       {% endif %}

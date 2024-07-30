@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import (
+    HttpResponseBadRequest,
     HttpResponseForbidden,
     HttpResponseNotFound,
     HttpResponseNotAllowed,
@@ -32,7 +33,7 @@ def my_docs(request):
         context = {"documents": documents}
         return render(request, "upload_doc/my_docs.html", context)
     else:
-        return HttpResponseForbidden("Forbidden")
+        return HttpResponseForbidden()
 
 
 def my_docs_detail(request, pk=None, transaction_type_slug=None):
@@ -70,12 +71,12 @@ def my_docs_detail(request, pk=None, transaction_type_slug=None):
                 }
                 return render(request, "upload_doc/my_docs_detail_bs.html", context)
             else:
-                return HttpResponseForbidden("Forbidden")
+                return HttpResponseBadRequest()
         else:
-            return HttpResponseForbidden("Forbidden")
+            return HttpResponseForbidden()
 
     else:
-        return HttpResponseNotAllowed("Only GET method is allowed")
+        return HttpResponseNotAllowed(permitted_methods=["GET"])
 
 
 # TODO: Change this to be a view with parameters to define the page number and the document id
@@ -108,9 +109,9 @@ def pagination_view(request):
             }
             return render(request, "upload_doc/partials/pagination_view.html", context)
         else:
-            return HttpResponseForbidden("Forbidden")
+            return HttpResponseForbidden()
     else:
-        return HttpResponseNotAllowed("Only POST method is allowed")
+        return HttpResponseNotAllowed(permitted_methods=["POST"])
 
 
 def delete_doc(request):
@@ -125,7 +126,7 @@ def delete_doc(request):
                     document.delete()
                 except Exception as e:
                     print("Error: " + str(e))
-                    return HttpResponseNotFound("Document not found")
+                    return HttpResponseNotFound()
             context = {"documents": Document.objects.filter(user=user).all}
             return render(
                 request,
@@ -133,9 +134,9 @@ def delete_doc(request):
                 context,
             )
         else:
-            return HttpResponseForbidden("Forbidden")
+            return HttpResponseForbidden()
     else:
-        return HttpResponseNotAllowed("Only POST method is allowed")
+        return HttpResponseNotAllowed(permitted_methods=["POST"])
 
 
 def upload_doc(request):
@@ -200,10 +201,11 @@ def upload_doc(request):
                 # add file type to file name
                 file_name = file_name + "." + file_type.split("/")[1]
 
-                # S3 file name
-                s3_file_name = str(user, "_", file_name)
+                # S3 file name is the user's primary key and the file name
+                s3_file_name = f"{user.pk}_{file_name}"
 
                 print("Sanitize File Name: " + file_name)
+                print("S3 File Name: " + s3_file_name)
                 print("Uploading file to S3")
                 success = upload_file_to_s3(file, bucket, s3_file_name)
                 print("Upload status: " + str(success))
@@ -225,7 +227,7 @@ def upload_doc(request):
                         document, created = Document.objects.get_or_create(
                             date_uploaded=timezone.now(),
                             user=user,
-                            file_name=file_name,
+                            name=file_name,
                             s3_file_name=s3_file_name,
                         )
 
@@ -296,5 +298,6 @@ def upload_doc(request):
                 return render(request, "upload_doc/upload_doc.html", {"form": form})
 
         return render(request, "upload_doc/upload_doc.html", {"form": form})
+
     else:
-        return HttpResponseForbidden("Forbidden")
+        return HttpResponseForbidden()

@@ -109,23 +109,33 @@
           {% else %}
           <td>
             <div class="data_inputs_{{ transaction.id }}">
+              <!-- TODO: Need to put in a pop up of existing expense categories and a method to add new category. -->
               <input 
-                type="text" 
+                type="search" 
                 name="transaction_category"
                 placeholder="Type here" 
                 class="input input-bordered input-sm w-full max-w-xs"
+                hx-post="{% url 'search_category' %}"
+                hx-trigger="focus, input changed delay:500ms, search"
+                hx-target="#search_result"
+                hx-swap="innerHTMl"
                 _="
                 on focus 
                   set my @placeholder to ''
+                  remove .hidden from #search_result
                 end
                 on keyup[key is 'Enter']
                   trigger click on the next .btn
                 end
-                  on keyup[key is 'Escape']
+                on keyup[key is 'Escape']
+                  add .hidden to #search_result then
                   set my value to '{{ transaction.expense_category.name }}' then
                   trigger click on the next .btn
                 end
                 "/>
+              <div class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary" id="search_result">
+                <!-- Response from HTMX active search component -->
+              </div>
               <input 
                 type="hidden" 
                 name="transaction_id" 

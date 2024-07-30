@@ -1,0 +1,22 @@
+<div class="card bg-base-100">
+  <ul class="menu w-56">
+    <!-- TODO: Add a view to direct user to add category with a link to direct back to the previous page -->
+    <li clas="hover:text-primary"><a>+ Add New Category</a></li>
+    {% for category in matching_category %} 
+    <li 
+      class="hover:text-primary">
+      <a 
+        <!--WARNING: This needs to be reviewed -->
+        _="
+        on click
+          put me in #transaction_category then
+          add .hidden to #search_result
+        end
+        ">
+        {{ category }}
+      </a>
+    </li>
+    {% endfor %} 
+  </ul>
+</div>
+

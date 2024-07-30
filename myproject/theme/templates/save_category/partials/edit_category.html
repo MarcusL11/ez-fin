@@ -15,12 +15,11 @@
       value="{{ transaction.id }}"
       _="
       on load 
-      set my.checked to false
+        set my.checked to false
       end 
       "/>
     {% endif %}
   </td>
-  <td>{{ counter_loop }}</td> 
   <td>{{ document.bank.name }}</td>
   <td>{{ document.transaction_type.name }}</td>
   <td>{{ transaction.transaction_date }}</td>
@@ -28,23 +27,37 @@
   <td>{{ transaction.amount|intcomma }}</td>
   <td>
     <div class="data_inputs_{{ transaction.id }}">
+      <!-- TODO: Need to put in a pop up of existing expense categories and a method to add new category.
+            https://hyperscript.org/cookbook/ 
+            https://htmx.org/examples/active-search/
+      -->
       <input 
-        type="text" 
+        type="searh" 
+        id="transaction_category"
         name="transaction_category"
         placeholder="{{ transaction.expense_category.name }}"
         class="input input-bordered input-sm w-full max-w-xs"
+        hx-post="{% url 'search_category' %}"
+        hx-trigger="focus, input changed delay:500ms, search"
+        hx-target="#search_result"
+        hx-swap="innerHTMl"
         _="
           on focus 
             set my @placeholder to ''
+            remove .hidden from #search_result
           end
           on keyup[key is 'Enter']
             trigger click on the next .btn
           end
           on keyup[key is 'Escape']
+            add .hidden to #search_result then
             set my value to '{{ transaction.expense_category.name }}' then
             trigger click on the next .btn
           end
           "/>
+      <div class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary" id="search_result">
+        <!-- Response from HTMX active search component -->
+      </div>
       <input 
         type="hidden" 
         name="transaction_id" 
@@ -56,7 +69,7 @@
     </div>
   </td>
   <td>
-    <div
+    <button
       class="btn btn-ghost"
       hx-post="{% url 'save_category' %}"
       hx-target="#transaction_row_{{ transaction.id }}"
@@ -64,7 +77,7 @@
       hx-trigger="click"
       hx-include=".data_inputs_{{ transaction.id }} input">
       <img src="{% static 'svg/save_icon.svg' %}">
-    </div>
+    </button>
   </td>
 
 </tr>
