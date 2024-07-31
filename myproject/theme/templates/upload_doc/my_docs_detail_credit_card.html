@@ -93,7 +93,7 @@
           {% if transaction.expense_category.name %}
           <td>{{ transaction.expense_category.name }}</td>
           <td>
-            <div 
+            <div
               class="btn btn-ghost"
               hx-post="{% url 'edit_category' %}"
               hx-target="#transaction_row_{{ transaction.id }}"
@@ -109,22 +109,23 @@
           {% else %}
           <td>
             <div class="data_inputs_{{ transaction.id }}">
-              <!-- TODO: Need to put in a pop up of existing expense categories and a method to add new category. -->
               <input 
                 type="search" 
+                id="transaction_category"
                 name="transaction_category"
-                placeholder="Type here" 
+                placeholder="Type here"
                 class="input input-bordered input-sm w-full max-w-xs"
                 hx-post="{% url 'search_category' %}"
                 hx-trigger="focus, input changed delay:500ms, search"
                 hx-target="#search_result"
-                hx-swap="innerHTMl"
+                hx-swap="innerHTML"
+                hx-include ="[name='transaction_id']"
                 _="
                 on focus 
                   set my @placeholder to ''
                   remove .hidden from #search_result
                 end
-                on keyup[key is 'Enter']
+                  on keyup[key is 'Enter']
                   trigger click on the next .btn
                 end
                 on keyup[key is 'Escape']

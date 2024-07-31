@@ -33,6 +33,10 @@ def save_category(request):
             counter_loop = request.POST.get("counter_loop")
             print("Counter loop: ", counter_loop)
 
+            # TODO: Consider using get_or_create instead of get_object_or_404 so that way
+            # TODO: When the user writes in their own category that doesnt exists, it creates it.
+            # TODO: Then if create is true, you can have a message with a bubble popup triggered
+            # TODO: a variable context of created.
             category = get_object_or_404(ExpenseCategory, name=category_name, user=user)
             print("Category name: ", category.name)
 
