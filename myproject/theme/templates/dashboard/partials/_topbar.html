@@ -1,24 +1,31 @@
 {% load static %}
 <div class="h-8 flex bg-primary justify-end items-center">
   <a href="">
-    <button class="flex justify-center text-base-100 bg-secondary border-2 border-secondary rounded-lg w-12 hover:bg-accent hover:text-white">
-      Pro
-    </button>
+    <div 
+      class="px-2 flex justify-center text-base-100 bg-secondary border-2 border-secondary rounded-lg w-auto hover:bg-accent hover:text-white"
+      _="
+      on mouseenter
+        put 'Upgrade to Pro' into me.innerText
+      end
+      on mouseleave
+        put 'Free Tier' into me.innerText
+      end
+      "
+    >
+      Free Tier
+    </div>
   </a>
   <div class="dropdown dropdown-end">
     <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
       <div class="w-6 rounded-full">
         <img
           alt="Tailwind CSS Navbar component"
-          src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+          src="{% static 'image/blue-gopher.png' %}" />
       </div>
     </div>
     <ul
       tabindex="0"
-      class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-      <li>
-        <a>Profile</a>
-      </li>
+      class="menu menu-sm dropdown-content bg-primary rounded-box z-[1] mt-3 w-52 p-2 shadow">
       <!-- Logout -->
       <li class="justify-center rounded-lg hover:bg-secondary">
         <a href="{% url 'sign_out' %}" class=" rounded">

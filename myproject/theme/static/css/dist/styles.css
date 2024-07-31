@@ -1084,6 +1084,12 @@ html {
     --tw-bg-opacity: 1;
     background-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity)));
   }
+
+  .table-zebra tr.hover:hover,
+  .table-zebra tr.hover:nth-child(even):hover {
+    --tw-bg-opacity: 1;
+    background-color: var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)));
+  }
 }
 
 .btn {
@@ -3040,6 +3046,10 @@ details.collapse summary::-webkit-details-marker {
   height: 100vh;
 }
 
+.h-12 {
+  height: 3rem;
+}
+
 .max-h-32 {
   max-height: 8rem;
 }
@@ -3090,6 +3100,10 @@ details.collapse summary::-webkit-details-marker {
 
 .w-64 {
   width: 16rem;
+}
+
+.w-24 {
+  width: 6rem;
 }
 
 .min-w-\[25px\] {
@@ -3314,6 +3328,10 @@ details.collapse summary::-webkit-details-marker {
 
 .p-8 {
   padding: 2rem;
+}
+
+.p-1 {
+  padding: 0.25rem;
 }
 
 .px-2 {
