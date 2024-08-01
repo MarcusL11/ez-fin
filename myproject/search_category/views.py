@@ -12,13 +12,18 @@ def search_category(request):
             search_content = request.POST["transaction_category"]
             transaction_id = request.POST["transaction_id"]
             print(search_content)
+            print("transaction id", transaction_id)
             sanitized_content = escape(search_content.strip())
             sanitized_content = re.sub(r"[^a-zA-Z0-9 ]", "", sanitized_content)
             search_content = sanitized_content
-            matching_category = ExpenseCategory.objects.filter(
-                name__icontains=search_content,
-                user=user,
-            ).values_list("name", flat=True)
+            matching_category = (
+                ExpenseCategory.objects.filter(
+                    name__icontains=search_content,
+                    user=user,
+                )
+                .values_list("name", flat=True)
+                .order_by("name")
+            )
 
             print("Matching Category: ", matching_category)
 

@@ -111,40 +111,38 @@
             <div class="data_inputs_{{ transaction.id }}">
               <input 
                 type="search" 
-                id="transaction_category"
+                id="transaction_category_{{ transaction.id }}"
                 name="transaction_category"
                 placeholder="Type here"
                 class="input input-bordered input-sm w-full max-w-xs"
                 hx-post="{% url 'search_category' %}"
-                hx-trigger="focus, input changed delay:500ms, search"
-                hx-target="#search_result"
+                hx-trigger="input changed delay:500ms, search"
+                hx-target="#search_result_{{ transaction.id }}"
                 hx-swap="innerHTML"
-                hx-include ="[name='transaction_id']"
+                hx-vals='{"transaction_id" : "{{ transaction.id }}"}'
                 _="
-                on focus 
+                on click
                   set my @placeholder to ''
-                  remove .hidden from #search_result
                 end
-                  on keyup[key is 'Enter']
+                on keyup
+                  remove .hidden from #search_result_{{ transaction.id }}
+                end
+                on keyup[key is 'Enter']
                   trigger click on the next .btn
                 end
                 on keyup[key is 'Escape']
-                  add .hidden to #search_result then
+                  add .hidden to #search_result_{{ transaction.id }} then
                   set my value to '{{ transaction.expense_category.name }}' then
                   trigger click on the next .btn
                 end
-                "/>
-              <div class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary" id="search_result">
+                "
+              />
+              <div 
+                class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary" 
+                id="search_result_{{ transaction.id }}"
+              >
                 <!-- Response from HTMX active search component -->
               </div>
-              <input 
-                type="hidden" 
-                name="transaction_id" 
-                value="{{ transaction.id }}"/>
-              <input 
-                type="hidden" 
-                name="counter_loop" 
-                value="{{ forloop.counter }}"/>
             </div>
           </td>
           <td>
@@ -154,7 +152,9 @@
               hx-target="#transaction_row_{{ transaction.id }}"
               hx-swap="outerHTML"
               hx-trigger="click"
-              hx-include=".data_inputs_{{ transaction.id }} input">
+              hx-include=".data_inputs_{{ transaction.id }} input"
+              hx-vals='{"transaction_id" : "{{ transaction.id }}"}'
+            >
               <img src="{% static 'svg/save_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
             </div>
           </td>

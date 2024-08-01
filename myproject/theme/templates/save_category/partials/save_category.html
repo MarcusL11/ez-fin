@@ -17,6 +17,9 @@
       on load 
       set my.checked to false
       end 
+      on change 
+      call checkCheckboxes()
+      end
       "/>
     {% endif %}
   </td>
@@ -27,9 +30,25 @@
   <td>{{ transaction.amount|intcomma }}</td>
 
   {% if transaction.expense_category.name %}
-  <td>{{ transaction.expense_category.name }}</td>
   <td>
+    {{ transaction.expense_category.name }}
+    {% if created %}
     <div 
+      class="text-xs absolute z-50 alert alert-success"
+      _="
+      on load
+        add .animate-bounce to me then
+        wait for 3s then
+        remove me
+      end
+      "
+    >
+      {{ created_message }}
+    </div>
+    {% endif %}
+  </td>
+  <td>
+    <div
       class="btn btn-ghost"
       hx-post="{% url 'edit_category' %}"
       hx-target="#transaction_row_{{ transaction.id }}"
@@ -37,9 +56,9 @@
       hx-trigger="click"
       hx-vals='{
       "transaction_id":"{{ transaction.id }}",
-      "counter_loop":"{{ counter_loop }}"
+      "counter_loop":"{{ forloop.counter }}"
       }'>
-      <img src="{% static 'svg/edit_icon.svg' %}" alt="">
+      <img src="{% static 'svg/edit_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
     </div>
   </td>
   {% else %}
@@ -47,41 +66,40 @@
     <div class="data_inputs_{{ transaction.id }}">
       <input 
         type="search" 
+        id="transaction_category_{{ transaction.id }}"
         name="transaction_category"
-        placeholder="Type here" 
+        placeholder="Type here"
         class="input input-bordered input-sm w-full max-w-xs"
         hx-post="{% url 'search_category' %}"
-        hx-trigger="focus, input changed delay:500ms, search"
-        hx-target="#search_result"
-        hx-swap="innerHTMl"
+        hx-trigger="input changed delay:500ms, search"
+        hx-target="#search_result_{{ transaction.id }}"
+        hx-swap="innerHTML"
+        hx-vals='{"transaction_id" : "{{ transaction.id }}"}'
         _="
-          on focus 
-            set my @placeholder to ''
-            remove .hidden from #search_result
-          end
-          on keyup[key is 'Enter']
-            trigger click on the next .btn
-          end
-          on keyup[key is 'Escape']
-            add .hidden to #search_result then
-            set my value to '{{ transaction.expense_category.name }}' then
-            trigger click on the next .btn
-          end
-          "/>
-      <div class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary" id="search_result">
+        on click
+        set my @placeholder to ''
+        end
+        on keyup
+        remove .hidden from #search_result_{{ transaction.id }}
+        end
+        on keyup[key is 'Enter']
+        trigger click on the next .btn
+        end
+        on keyup[key is 'Escape']
+        add .hidden to #search_result_{{ transaction.id }} then
+        set my value to '{{ transaction.expense_category.name }}' then
+        trigger click on the next .btn
+        end
+        "
+      />
+      <div 
+        class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary" 
+        id="search_result_{{ transaction.id }}"
+      >
         <!-- Response from HTMX active search component -->
       </div>
-      <input 
-        type="hidden" 
-        name="transaction_id" 
-        value="{{ transaction.id }}"/>
-      <input 
-        type="hidden" 
-        name="counter_loop" 
-        value="{{ counter_loop }}"/>
     </div>
   </td>
-  
   <td>
     <div
       class="btn btn-ghost"
@@ -89,11 +107,12 @@
       hx-target="#transaction_row_{{ transaction.id }}"
       hx-swap="outerHTML"
       hx-trigger="click"
-      hx-include=".data_inputs_{{ transaction.id }} input">
-      <img src="{% static 'svg/save_icon.svg' %}">
+      hx-include=".data_inputs_{{ transaction.id }} input"
+      hx-vals='{"transaction_id" : "{{ transaction.id }}"}'
+    >
+      <img src="{% static 'svg/save_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
     </div>
   </td>
- 
   {% endif %}
 
 </tr>

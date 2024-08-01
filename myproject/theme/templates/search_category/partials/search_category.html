@@ -7,8 +7,8 @@
         class=""
         _="
         on click
-          set #transaction_category's value to me.innerText then
-          add .hidden to #search_result
+        set #transaction_category_{{ transaction_id }}'s value to me.innerText then
+          add .hidden to #search_result_{{ transaction_id }}
         end
         ">
         {{ category }}
