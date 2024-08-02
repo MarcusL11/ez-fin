@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import CustomUser
+from django.utils.text import slugify
 
 
 class Bank(models.Model):
@@ -23,7 +24,8 @@ class TransactionType(models.Model):
         return f"Transaction Type: {self.name}"
 
     def save(self, *args, **kwargs):
-        self.slug = self.name.lower().replace(" ", "-")
+        if not self.slug:
+            self.slug = slugify(self.name)
         super(TransactionType, self).save(*args, **kwargs)
 
 
@@ -80,21 +82,21 @@ class Document(models.Model):
         blank=True,
     )
     # TODO: Need to move the relationship to BalanceAndPayment model: Then Adjust the Textract writing to model code
-    balance_and_payment = models.OneToOneField(
-        "BalanceAndPayment",
-        on_delete=models.CASCADE,
-        related_name="document",
-        null=True,
-        blank=True,
-    )
-    # TODO: Need to move the relationship to CreditCardSummary model: Then Adjust the Textract writing to model code
-    credit_card_summary = models.OneToOneField(
-        "CreditCardSummary",
-        on_delete=models.CASCADE,
-        related_name="document",
-        null=True,
-        blank=True,
-    )
+    # balance_and_payment = models.OneToOneField(
+    #     "BalanceAndPayment",
+    #     on_delete=models.CASCADE,
+    #     related_name="document",
+    #     null=True,
+    #     blank=True,
+    # )
+    # # TODO: Need to move the relationship to CreditCardSummary model: Then Adjust the Textract writing to model code
+    # credit_card_summary = models.OneToOneField(
+    #     "CreditCardSummary",
+    #     on_delete=models.CASCADE,
+    #     related_name="document",
+    #     null=True,
+    #     blank=True,
+    # )
 
     def __str__(self):
         return f"Bank: {self.bank},Type: {self.transaction_type},  Date Uploaded: {self.date_uploaded}"
@@ -105,7 +107,20 @@ class CreditCardSummary(models.Model):
     summary details from each document
     """
 
-    # TODO: Add one-to-one with User
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="credit_card_summary",
+        null=True,
+        blank=True,
+    )
+    document = models.ForeignKey(
+        Document,
+        on_delete=models.CASCADE,
+        related_name="credit_card_summary",
+        null=True,
+        blank=True,
+    )
     card_number = models.CharField(max_length=20, null=True, blank=True)
     credit_limit = models.DecimalField(
         max_digits=10,
@@ -124,7 +139,20 @@ class BalanceAndPayment(models.Model):
     payment details for each document
     """
 
-    # TODO: Add one-to-one with User
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="balance_and_payment",
+        null=True,
+        blank=True,
+    )
+    document = models.ForeignKey(
+        Document,
+        on_delete=models.CASCADE,
+        related_name="balance_and_payment",
+        null=True,
+        blank=True,
+    )
     new_balance = models.DecimalField(
         max_digits=10,
         decimal_places=2,

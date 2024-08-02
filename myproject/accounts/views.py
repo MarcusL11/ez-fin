@@ -23,7 +23,7 @@ def verify_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
         # subscription.save()
         login(request, user)
         print("Email verification successful")
-        return redirect("dashboard")
+        return redirect("upload_doc")
 
     print("Email verification failed")
     return redirect("sign_in")

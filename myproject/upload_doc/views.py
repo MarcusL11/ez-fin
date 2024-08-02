@@ -231,11 +231,26 @@ def upload_doc(request):
                             s3_file_name=s3_file_name,
                         )
 
+                        bank_and_payment, created = Document.objects.get_or_create(
+                            user=user,
+                            document=document,
+                        )
+
+                        credit_card_summary, created = Document.objects.get_or_create(
+                            user=user,
+                            document=document,
+                        )
+
                         # Save the data to the all models with its relationships
                         try:
                             print("Saving data to models")
                             # TODO: Consider adding Bank Type as a parameter instead of hardcoding
-                            save_data_to_models(data_frames_dicts, document)
+                            save_data_to_models(
+                                data_frames_dicts,
+                                document,
+                                credit_card_summary,
+                                bank_and_payment,
+                            )
 
                         except Exception as e:
                             print("Error: " + str(e))
@@ -251,7 +266,7 @@ def upload_doc(request):
                         return redirect(
                             "my_docs_detail",
                             pk=document.pk,
-                            transaction_type_slug="credit-card",
+                            transaction_type_slug=document.transaction_type.slug,
                         )
 
                     elif doc_type == "Bank Statement":

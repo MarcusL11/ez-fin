@@ -15,10 +15,12 @@ def ai_categorize(request):
             print("No transactions were selected")
             return HttpResponse(status=400)  # Bad Request
 
-        transactions = list(TransactionDetail.objects.filter(id__in=transaction_ids))
+        selected_transactions = list(
+            TransactionDetail.objects.filter(id__in=transaction_ids)
+        )
 
         # Grabbing the related document, can be any transaction as its the same for all
-        document = transactions[0].document
+        document = selected_transactions[0].document
         print("Document ID: ", document.id)
 
         # pagination
@@ -32,10 +34,10 @@ def ai_categorize(request):
         categories = ExpenseCategory.objects.all()
 
         print("Fetching expense categories for transactions")
-        result = fetch_expense(transactions, categories)
+        result = fetch_expense(selected_transactions, categories)
         category_mapping = {category.name: category for category in categories}
 
-        for transaction in transactions:
+        for transaction in selected_transactions:
             transaction_id_str = str(transaction.pk)
             if transaction_id_str in result:
                 category_name = result[transaction_id_str]

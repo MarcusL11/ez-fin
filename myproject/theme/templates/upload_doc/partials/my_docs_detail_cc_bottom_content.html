@@ -7,7 +7,7 @@
     disabled
     class="btn btn-primary" 
     hx-post="{% url 'ai_categorize' %}"
-    hx-target="#transaction_table_body"
+    hx-target="#pagination_view_result"
     hx-swap="outerHTML"
     hx-trigger="click"
     hx-include="[name='transaction_table_body']"

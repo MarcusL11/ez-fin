@@ -9,8 +9,8 @@
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
         <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
           <h1 class="text-5xl font-bold mb-6">Convert PDF Bank Statements to CSV</h1>
-          <p class="text-xl mb-8">Does your bank not offer an option to download your statements in Excel or CSV? </p>
-          <p class="text-xl mb-8">BahtBytes extracts data from your credit card and bank statements, returning your data in CSV.</p>
+          <p class="text-xl mb-8">BahtBytes extracts data from your credit card and bank statements, returning you a CSV file version.</p>
+          <p class="text-xl mb-8">No more tidious copy paste or manual data entry inputs</p>
           {% if user.is_authenticated and user.has_verified_email %}
             <a href="{% url 'upload_doc' %}"><button class="btn btn-primary">Try Now!</button></a>
           {% else %}
@@ -18,7 +18,7 @@
           {% endif %}
         </div>
         <div class="mascot w-full md:w-1/2 mt-8 md:mt-0 transform translate-x-full transition-all duration-1000">
-          <img src="{% static 'image/hero-image.jpg' %}" alt="" class="mx-auto rounded-xl border-4 border-primary shadow-lg shadow-white">
+          <img src="{% static 'image/hero-image.jpg' %}" alt="" class="mx-auto rounded-xl border-2 border-primary shadow-lg shadow-black">
         </div>
       </div>
     </section>
@@ -27,7 +27,7 @@
       _="on intersection(intersecting) having threshold 0.2
       add .animate-fade-in to .content
       add .animate-slide-in to .mascot">
-      <div class="container mx-auto px-4 flex flex-col md:flex-row-reverse items-center">
+      <div class="container mx-auto px-4 flex flex-col md:flex-row-reverse gap-x-4 items-center">
         <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
           <h2 class="text-3xl font-bold mb-6">How Does It Work?</h2>
           <ol class="list-decimal list-inside space-y-4">
@@ -36,9 +36,13 @@
             <li>Use AI to categorize each transactions.</li>
             <li>Copy Paste the data into Excel or Download as a CSV file</li>
           </ol>
-          <button class="mt-8 btn btn-primary">Try Now!</button>
+          {% if user.is_authenticated and user.has_verified_email %}
+          <a href="{% url 'upload_doc' %}"><button class="mt-8 btn btn-primary">Try Now!</button></a>
+          {% else %}
+          <a href="#sign-in"><button class="mt-8 btn btn-primary">Try Now!</button></a>
+          {% endif %}
         </div>
-        <div class="">
+        <div>
           <img src="{% static 'svg/document_scan.svg'%}" alt="How It Works Mascot" class="mx-auto">
         </div>
       </div>
@@ -53,33 +57,76 @@
         <div class="pricing-cards flex flex-col md:flex-row justify-center items-center gap-8 opacity-0 transition-all duration-1000">
           <div class="card w-96 bg-base-300 shadow-xl">
             <div class="card-body">
-              <h3 class="card-title">FREE</h3>
+              <h3 class="card-title">FREE TRIAL</h3>
               <p>Extract data from your statements and download as a CSV file.</p>
               <ul class="list-disc list-inside my-4">
                 <li>1 document upload</li>
-                <li>1 AI Auto Categorization</li>
+                <li>AI Auto categorization trial</li>
               </ul>
               <div class="card-actions justify-end">
                 {% if user.is_authenticated and user.has_verified_email %}
                   <a href="{% url 'upload_doc' %}"><button class="btn btn-primary">Try Now!</button></a>
                 {% else %}
-                  <a href="{% url 'sign_in' %}"><button class="btn btn-primary">Try Now!</button></a>
+                  <a href="#sign_in"><button class="btn btn-primary">Try Now!</button></a>
                 {% endif %}
               </div>
             </div>
           </div>
           <div class="card w-96 bg-primary text-primary-content shadow-xl">
             <div class="card-body">
-              <h3 class="card-title">BahtBytes Pro</h3>
-              <p>Free + AI Auto-Categorization</p>
+              <h3 class="card-title">PRO</h3>
+              <div class="absolute right-4 top-4 badge badge-secondary">POPULAR CHOICE</div>
+              <div class="bg-base-100 text-primary w-full mt-4 text-center border-2 rounded-xl">
+                <p class="p-1 font-bold">Uploads per month</p>
+                <p class="p-1 font-bold">100<span class="font-normal text-sm"> statements</span></p>
+              </div>
               <ul class="list-disc list-inside my-4">
                 <li>100 uploads per month</li>
-                <li>Access to auto-categorization</li>
+                <li>Access to auto-categorization tool</li>
+                <li>Document storage</li>
+                <li>Early access to new features</li>
                 <li>Priority support</li>
               </ul>
-              <div class="card-actions justify-end">
-                <button class="btn">Choose Pro</button>
+              <div class="mx-auto justify-center">
+                <p class="text-3xl font-bold mt-4">1,249.-<span class="text-sm font-normal">/Month</span></p>
               </div>
+              <div class="card-actions justify-end">
+                <button class="btn btn-secondary">Choose Pro</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="py-16  pt-24">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2> 
+        <div class="join join-vertical w-full">
+          <div 
+            class="collapse collapse-arrow join-item border-base-300 border" 
+            _="
+            on click 
+            toggle .collapse-open on me
+            end
+            ">
+            <div class="collapse-title text-xl font-medium">Can we upload other formats other than PDFs?</div>
+            <div class="text-primary collapse-content">
+              <p>JPEGs and PNGs are acceptable. However, please note PDF statements issued by the banks are best.</p>
+            </div>
+          </div>
+        </div>
+        <div class="join join-vertical w-full">
+          <div 
+            class="collapse collapse-arrow join-item border-base-300 border" 
+            _="
+            on click 
+            toggle .collapse-open on me
+            end
+            ">
+            <div class="collapse-title text-xl font-medium">After unsubscribing within the billing month, will I still have access to the platform?</div>
+            <div class="text-primary collapse-content">
+              <p>Yes subscriptions are based on a monthly bill cycle.</p>
             </div>
           </div>
         </div>
@@ -87,56 +134,34 @@
     </section>
 
     {% include 'accounts/sign_in.html' %}
-
-    <section id="faq" class="py-16  pt-24">
-       <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2> 
-        <div class="join join-vertical w-full">
-          <div 
-            class="collapse collapse-arrow join-item border-base-300 border" 
-            _="
-            on click 
-              toggle .collapse-open on me
-            end
-            ">
-            <div class="collapse-title text-xl font-medium">Click to open this one and close others</div>
-            <div class="collapse-content">
-              <p>hello</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
   </main>
 
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    .animate-fade-in {
-      animation: fadeIn 1s ease-out forwards;
-    }
-    .animate-slide-in {
-      animation: slideIn 1s ease-out forwards;
-    }
-    .animate-bounce {
-      animation: bounce 2s infinite;
-    }
-    @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-    }
-    @keyframes slideIn {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
-    }
-    @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-    }
+  html {
+    scroll-behavior: smooth;
+  }
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+  }
+  .animate-slide-in {
+    animation: slideIn 1s ease-out forwards;
+  }
+  .animate-bounce {
+    animation: bounce 2s infinite;
+  }
+  @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+  }
+  @keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+  }
+  @keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+  }
   </style>
   <!-- footer //end -->
 
-{% endblock content %}
+  {% endblock content %}

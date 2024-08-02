@@ -25,7 +25,7 @@
           <div class="flex items-center space-x-2">
             <!--Edit Button-->
             <button 
-              class="text-warning transition-colors focus:outline-none"
+              class="text-warning transition-colors focus:outline-none hover:bg-base-300 rounded-lg"
               hx-post="{% url 'edit_category_list' %}"
               hx-target="#category_list_{{ category.id }}"
               hx-swap="outerHTML"
@@ -40,7 +40,7 @@
             </button>
             <!--Delete Button-->
             <button 
-              class="text-error transition-colors focus:outline-none"
+              class="text-error transition-colors focus:outline-none hover:bg-base-300 rounded-lg"
               hx-post="{% url 'delete_category_list' %}"
               hx-target="#category_list"
               hx-swap="innerHTML"

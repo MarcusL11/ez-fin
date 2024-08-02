@@ -1,102 +1,167 @@
 {% load static %}
-{% load humanize %} 
-<tbody 
-  id="transaction_table_body" 
-  name="transaction_table_body"
+{% load humanize %}
+<div 
+  id="pagination_view_result" 
+  class="my-2 flex-col min-h-screen"
   _="
-  on load
-    add .hidden to #loading-button then
-    remove .hidden from #ai-icon
-  end   
+    def checkCheckboxes()
+      set anyChecked to false
+      for checkbox in <input.checkbox/> 
+        if checkbox.checked
+          set anyChecked to true
+          break
+        end
+      end
+      if anyChecked
+        remove @disabled from #ai-button
+      else
+        set #ai-button@disabled to true
+      end
+    end
+    on load checkCheckboxes()
   "
 >
-  {% for transaction in page_obj %}
-  <tr id="transaction_row_{{ transaction.id}}">
-    <td>
-      {% if transaction.saved %}
-      <input 
-        type="checkbox" 
-        class="checkbox checkbox-xs" 
-        disabled />
-      {% else%}
-      <input 
-        type="checkbox" 
-        class="checkbox checkbox-xs"
-        name="transaction_ids"
-        value="{{ transaction.id }}"
-        _="
-        on load 
-          set my.checked to false
-        end 
-        "/>
-      {% endif %}
-    </td>
-    <td>{{ forloop.counter }}</td> 
-    <td>{{ document.bank.name }}</td>
-    <td>{{ document.transaction_type.name }}</td>
-    <td>{{ transaction.transaction_date }}</td>
-    <td>{{ transaction.description }}</td>
-    <td>{{ transaction.amount|intcomma }}</td>
+  <!-- include Top Content -->
+  {% include "upload_doc/partials/my_docs_detail_cc_top_content.html" %}
 
-    {% if transaction.expense_category.name %}
-    <td>{{ transaction.expense_category.name }}</td>
-    <td>
-      <div 
-        class="btn btn-ghost"
-        hx-post="{% url 'edit_category' %}"
-        hx-target="#transaction_row_{{ transaction.id }}"
-        hx-swap="outerHTML"
-        hx-trigger="click"
-        hx-vals='{
-        "transaction_id":"{{ transaction.id }}",
-        "counter_loop":"{{ forloop.counter }}"
-        }'>
-        <img src="{% static 'svg/edit_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
-      </div>
-    </td>
-    {% else %}
-    <td>
-      <div class="data_inputs_{{ transaction.id }}">
-        <input 
-          type="text" 
-          name="transaction_category"
-          placeholder="Type here" 
-          class="input input-bordered input-sm w-full max-w-xs"
-          _="
-          on focus 
-            set my @placeholder to ''
-          end
-          on keyup[key is 'Enter']
-            trigger click on the next .btn
-          end
-          on keyup[key is 'Escape']
-            set my value to '{{ transaction.expense_category.name }}' then
-            trigger click on the next .btn
-          end
-          "/>
-        <input 
-          type="hidden" 
-          name="transaction_id" 
-          value="{{ transaction.id }}"/>
-        <input 
-          type="hidden" 
-          name="counter_loop" 
-          value="{{ forloop.counter }}"/>
-      </div>
-    </td>
-    <td>
-      <div
-        class="btn btn-ghost"
-        hx-post="{% url 'save_category' %}"
-        hx-target="#transaction_row_{{ transaction.id }}"
-        hx-swap="outerHTML"
-        hx-trigger="click"
-        hx-include=".data_inputs_{{ transaction.id }} input">
-        <img src="{% static 'svg/save_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
-      </div>
-    </td>
-    {% endif %}
+  <div class="overflow-x-auto">
+    <table 
+      class="my-10 table table-xs"
+      id="transaction_table">
+      <thead>
+        <tr>
+          <th>
+            <label>
+              <input type="checkbox" class="checkbox checkbox-xs"
+                _="
+                on click
+                  set .checkbox.checked to my.checked
+                end
+                on change 
+                  call checkCheckboxes()
+                end
+                "/>
+            </label>
+          </th>
+          <th>Bank</th>
+          <th>Transaction Type</th>
+          <th>Transaction Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Category</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="transaction_table_body" name="transaction_table_body">
+        {% for transaction in page_obj %}
+        <tr id="transaction_row_{{ transaction.id}}">
+          <td>
+            {% if transaction.saved %}
+            <input 
+              type="checkbox" 
+              class="checkbox checkbox-xs" 
+              disabled />
+            {% else%}
+            <input 
+              type="checkbox" 
+              class="checkbox checkbox-xs"
+              name="transaction_ids"
+              value="{{ transaction.id }}"
+              _="
+              on load 
+                set my.checked to false
+              end
+              on change 
+                call checkCheckboxes()
+              end
+              "/>
+            {% endif %}
+          </td>
+          <td>{{ document.bank.name }}</td>
+          <td>{{ document.transaction_type.name }}</td>
+          <td>{{ transaction.transaction_date }}</td>
+          <td>{{ transaction.description }}</td>
+          <td>{{ transaction.amount|intcomma }}</td>
 
-  </tr>
-  {% endfor %}
-</tbody>
+          {% if transaction.expense_category.name %}
+          <td>{{ transaction.expense_category.name }}</td>
+          <td>
+            <div 
+              class="btn btn-ghost"
+              hx-post="{% url 'edit_category' %}"
+              hx-target="#transaction_row_{{ transaction.id }}"
+              hx-swap="outerHTML"
+              hx-trigger="click"
+              hx-vals='{
+              "transaction_id":"{{ transaction.id }}",
+              "counter_loop":"{{ forloop.counter }}"
+              }'>
+              <img src="{% static 'svg/edit_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
+            </div>
+          </td>
+          {% else %}
+          <td>
+            <div class="data_inputs_{{ transaction.id }}">
+              <input 
+                type="search" 
+                id="transaction_category_{{ transaction.id }}"
+                name="transaction_category"
+                placeholder="Type here" 
+                class="input input-bordered input-sm w-full max-w-xs"
+                hx-post="{% url 'search_category' %}"
+                hx-trigger="focus, input changed delay:500ms, search"
+                hx-target="#search_result_{{ transaction.id }}"
+                hx-swap="innerHTML"
+                hx-vals='{"transaction_id" : "{{ transaction.id }}"}'
+                _="
+                on click
+                  set my @placeholder to ''
+                end
+
+                on keyup
+                  remove .hidden from #search_result_{{ transaction.id }}
+                end
+                on keyup[key is 'Enter']
+                  trigger click on the next .btn
+                end
+                on keyup[key is 'Escape']
+                  add .hidden to #search_result_{{ transaction.id }} then
+                  set my value to '{{ transaction.expense_category.name }}' then
+                  trigger click on the next .btn
+                end
+                "
+              />
+              <div 
+                class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary" 
+                id="search_result_{{ transaction.id }}"
+              >
+                <!-- Response from HTMX active search component -->
+              </div>
+            </div>
+          </td>
+          <td>
+            <div
+              class="btn btn-ghost"
+              hx-post="{% url 'save_category' %}"
+              hx-target="#transaction_row_{{ transaction.id }}"
+              hx-swap="outerHTML"
+              hx-trigger="click"
+              hx-include=".data_inputs_{{ transaction.id }} input"
+              hx-vals='{"transaction_id" : "{{ transaction.id }}"}'
+            >
+              <img src="{% static 'svg/save_icon.svg' %}" class="min-w-[25px] min-h-[25px]">
+            </div>
+          </td>
+          {% endif %}
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Bottom content --> 
+  {% include "upload_doc/partials/my_docs_detail_cc_bottom_content.html" %}
+
+</div>
+
+

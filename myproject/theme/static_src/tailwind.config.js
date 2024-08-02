@@ -45,7 +45,7 @@ module.exports = {
     extend: {},
   },
   daisyui: {
-    themes: ["emerald", "dark"],
+    themes: ["light"],
   },
   plugins: [
     /**
