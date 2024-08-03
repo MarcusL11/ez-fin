@@ -2,12 +2,17 @@
 {% load static %}
 {% block content %}
   <main class="flex-grow">
-    <section id="introduction" class="min-h-screen flex items-center  pt-16" 
-      _="on intersection(intersecting) having threshold 0.2
-      add .animate-fade-in to .content
-      add .animate-slide-in to .mascot">
+    <section 
+      id="introduction" 
+      class="min-h-screen flex items-center pt-16 opacity-0 duration-500" 
+      _="
+      on load
+        transition opacity to 1 then
+      end
+      "
+    >
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
-        <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
+        <div class="content w-full md:w-1/2">
           <h1 class="text-5xl font-bold mb-6">Convert PDF Bank Statements to CSV</h1>
           <p class="text-xl mb-8">BahtBytes extracts data from your credit card and bank statements, returning you a CSV file version.</p>
           <p class="text-xl mb-8">No more tidious copy paste or manual data entry inputs</p>
@@ -17,18 +22,47 @@
             <a href="#sign-in"><button class="btn btn-primary">Try Now!</button></a>
           {% endif %}
         </div>
-        <div class="mascot w-full md:w-1/2 mt-8 md:mt-0 transform translate-x-full transition-all duration-1000">
-          <img src="{% static 'image/hero-image.jpg' %}" alt="" class="mx-auto rounded-xl border-2 border-primary shadow-lg shadow-black">
+        <div 
+          class="mascot w-full md:w-1/2 mt-8 md:mt-0"
+          _="
+          on mouseenter
+            add .hidden to #hero-image then
+            remove .hidden from #converted_csv then
+            add .animate-fade-in to #converted_csv then
+          end
+          on mouseleave
+            add .hidden to #converted_csv then
+            remove .hidden from #hero-image then
+            add .animate-fade-in to #hero-image
+          "
+        >
+          <img 
+            id="hero-image"
+            src="{% static 'image/hero-image.jpg' %}" 
+            alt="examples of bank statements" 
+            class="mx-auto rounded-xl border-2 border-primary shadow-lg shadow-black"
+          >
+          <img 
+            id="converted_csv"
+            src="{% static 'image/blue-gopher.png' %}" 
+            alt="example of converted csv" 
+            class="hidden mx-auto rounded-xl border-2 border-primary shadow-lg shadow-black"
+          >
         </div>
       </div>
     </section>
 
-    <section id="how-it-works" class="py-16  pt-24"
-      _="on intersection(intersecting) having threshold 0.2
-      add .animate-fade-in to .content
-      add .animate-slide-in to .mascot">
+    <section 
+      id="how-it-works" 
+      class="py-16 pt-24 opacity-0"
+      _="
+      on intersection(intersecting) having threshold 0.5
+        if intersecting transition opacity to 1
+        end
+      end
+      ">
       <div class="container mx-auto px-4 flex flex-col md:flex-row-reverse gap-x-4 items-center">
-        <div class="content w-full md:w-1/2 opacity-0 transition-all duration-1000">
+        <div class="content w-full md:w-1/2">
           <h2 class="text-3xl font-bold mb-6">How Does It Work?</h2>
           <ol class="list-decimal list-inside space-y-4">
             <li>Upload your PDF Statements.</li>
@@ -48,13 +82,19 @@
       </div>
     </section>
 
-    <section id="pricing" class="py-16  pt-24"
-      _="on intersection(intersecting) having threshold 0.2
-      add .animate-fade-in to .pricing-cards
-      add .animate-bounce to .mascot">
+    <section 
+      id="pricing" 
+      class="py-16 pt-24 opacity-0"
+      _="
+      on intersection(intersecting) having threshold 0.5
+        if intersecting transition opacity to 1
+        end
+      end
+      "
+    >
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-8">Pricing</h2>
-        <div class="pricing-cards flex flex-col md:flex-row justify-center items-center gap-8 opacity-0 transition-all duration-1000">
+        <div class="pricing-cards flex flex-col md:flex-row justify-center items-center gap-8">
           <div class="card w-96 bg-base-300 shadow-xl">
             <div class="card-body">
               <h3 class="card-title">FREE TRIAL</h3>
@@ -99,7 +139,17 @@
       </div>
     </section>
 
-    <section id="faq" class="py-16  pt-24">
+    <section 
+      id="faq" 
+      class="py-16 pt-24 opacity-0"
+      _="
+      on intersection(intersecting) having threshold 0.5
+        if intersecting
+          transition opacity to 1
+        end
+      end
+      "
+    >
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2> 
         <div class="join join-vertical w-full">
@@ -107,7 +157,7 @@
             class="collapse collapse-arrow join-item border-base-300 border" 
             _="
             on click 
-            toggle .collapse-open on me
+              toggle .collapse-open on me
             end
             ">
             <div class="collapse-title text-xl font-medium">Can we upload other formats other than PDFs?</div>
@@ -121,7 +171,7 @@
             class="collapse collapse-arrow join-item border-base-300 border" 
             _="
             on click 
-            toggle .collapse-open on me
+              toggle .collapse-open on me
             end
             ">
             <div class="collapse-title text-xl font-medium">After unsubscribing within the billing month, will I still have access to the platform?</div>
@@ -133,7 +183,20 @@
       </div>
     </section>
 
-    {% include 'accounts/sign_in.html' %}
+    <div
+      class="mt-20 opacity-0"
+      _="
+      on intersection(intersecting) having threshold 0.5
+        if intersecting
+          transition opacity to 1
+        end
+      end
+      "
+    >
+      {% include 'accounts/sign_in.html' %}
+
+    </div>
+
   </main>
 
   <style>
@@ -146,9 +209,7 @@
   .animate-slide-in {
     animation: slideIn 1s ease-out forwards;
   }
-  .animate-bounce {
-    animation: bounce 2s infinite;
-  }
+  
   @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
