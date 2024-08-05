@@ -81,25 +81,9 @@ class Document(models.Model):
         null=True,
         blank=True,
     )
-    # TODO: Need to move the relationship to BalanceAndPayment model: Then Adjust the Textract writing to model code
-    # balance_and_payment = models.OneToOneField(
-    #     "BalanceAndPayment",
-    #     on_delete=models.CASCADE,
-    #     related_name="document",
-    #     null=True,
-    #     blank=True,
-    # )
-    # # TODO: Need to move the relationship to CreditCardSummary model: Then Adjust the Textract writing to model code
-    # credit_card_summary = models.OneToOneField(
-    #     "CreditCardSummary",
-    #     on_delete=models.CASCADE,
-    #     related_name="document",
-    #     null=True,
-    #     blank=True,
-    # )
 
     def __str__(self):
-        return f"Bank: {self.bank},Type: {self.transaction_type},  Date Uploaded: {self.date_uploaded}"
+        return f"PK: {self.pk} + Bank: {self.bank},Type: {self.transaction_type},  Date Uploaded: {self.date_uploaded}"
 
 
 class CreditCardSummary(models.Model):
@@ -229,7 +213,7 @@ class TransactionDetail(models.Model):
     )
 
     def __str__(self):
-        return f"Description: {self.description} + Amount: {self.amount} + Saved: {self.saved}"
+        return f"Document: {self.document.pk } + Description: {self.description} + Amount: {self.amount} + Saved: {self.saved}"
 
     def get_parent_gl_account(self):
         return (

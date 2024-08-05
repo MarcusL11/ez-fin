@@ -77,18 +77,18 @@
         hx-vals='{"transaction_id" : "{{ transaction.id }}"}'
         _="
         on click
-        set my @placeholder to ''
+          set my @placeholder to ''
         end
         on keyup
-        remove .hidden from #search_result_{{ transaction.id }}
+          remove .hidden from #search_result_{{ transaction.id }}
         end
         on keyup[key is 'Enter']
-        trigger click on the next .btn
+          trigger click on the next .btn
         end
         on keyup[key is 'Escape']
-        add .hidden to #search_result_{{ transaction.id }} then
-        set my value to '{{ transaction.expense_category.name }}' then
-        trigger click on the next .btn
+          add .hidden to #search_result_{{ transaction.id }} then
+          set my value to '{{ transaction.expense_category.name }}' then
+          trigger click on the next .btn
         end
         "
       />

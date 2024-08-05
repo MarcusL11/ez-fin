@@ -14,11 +14,11 @@
     <h1 class="text-2xl font-bold mb-6">Document Name: {{ document.name }}</h1>
     <p><span class="font-bold">Bank: </span>{{ document.bank.name }}</p>
     <p><span class="font-bold">Document Type: </span>{{ document.transaction_type.name }}</p>
-    <p><span class="font-bold">Card Number: </span>{{ document.credit_card_summary.card_number }}</p>
+    <p><span class="font-bold">Card Number: </span>{{ credit_card_summary.card_number }}</p>
     <p><span class="font-bold">Date Uploaded: </span>{{ document.date_uploaded }}</p>
-    <p><span class="font-bold">New Balance: </span>{{ document.balance_and_payment.new_balance|intcomma }}</p>
-    <p><span class="font-bold">Minimum Payment: </span>{{ document.balance_and_payment.minimum_payment|intcomma }}</p>
-    <p><span class="font-bold">Payment Due Date: </span>{{ document.balance_and_payment.payment_date }}</p>
+    <p><span class="font-bold">New Balance: </span>{{ balance_and_payment.new_balance|intcomma }}</p>
+    <p><span class="font-bold">Minimum Payment: </span>{{ balance_and_payment.minimum_payment|intcomma }}</p>
+    <p><span class="font-bold">Payment Due Date: </span>{{ balance_and_payment.payment_date }}</p>
   </header>             
 </section>
 

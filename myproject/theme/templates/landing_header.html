@@ -9,7 +9,7 @@
     <a href="#pricing" class="btn btn-ghost">Pricing</a>
     <a href="#faq" class="btn btn-ghost">FAQ</a>
     {% if user.is_authenticated and user.has_verified_email %}
-      <a href="{% url 'dashboard' %}" class="btn btn-primary">Dashboard</a>
+      <a href="{% url 'upload_doc' %}" class="btn btn-primary">Dashboard</a>
     {% else %}
     <a href="#sign-in" class="btn btn-primary">Get Started</a>
     {% endif %}

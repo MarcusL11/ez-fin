@@ -18,8 +18,14 @@ from utilities.amazon_textract.amz_data_saver_scb_bs import save_data_to_models_
 from utilities.amazon_textract.amz_textract_scb_bs import (
     get_doc_analysis_results_bs,
 )
-import time
-from .models import Document, TransactionType
+from utilities.amazon_textract.amazon_docs import main as process_doc
+from .models import (
+    Document,
+    TransactionType,
+    BalanceAndPayment,
+    CreditCardSummary,
+    Bank,
+)
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.shortcuts import redirect
@@ -41,13 +47,25 @@ def my_docs_detail(request, pk=None, transaction_type_slug=None):
         if not request.user.is_anonymous and request.user.has_verified_email:
             user = request.user
             document = get_object_or_404(Document, pk=pk, user=user)
-
+            balance_and_payment = get_object_or_404(
+                BalanceAndPayment,
+                document=document,
+                user=user,
+            )
+            credit_card_summary = get_object_or_404(
+                CreditCardSummary,
+                document=document,
+                user=user,
+            )
             transaction_type = get_object_or_404(
-                TransactionType, slug=transaction_type_slug
+                TransactionType,
+                slug=transaction_type_slug,
             )
             print("transaction_type_slug: " + str(transaction_type.slug))
 
-            transactions = document.transaction_details.all()
+            transactions = document.transaction_details.all().order_by(
+                "transaction_date"
+            )
 
             paginator = Paginator(transactions, 10)
             page_number = request.GET.get("page", 1)
@@ -58,6 +76,8 @@ def my_docs_detail(request, pk=None, transaction_type_slug=None):
                 print("Credit Card Template was accessed")
                 context = {
                     "document": document,
+                    "balance_and_payment": balance_and_payment,
+                    "credit_card_summary": credit_card_summary,
                     "page_obj": page_obj,
                 }
                 return render(
@@ -93,7 +113,19 @@ def pagination_view(request):
             print("Document ID: ", doucment_id)
 
             document = Document.objects.get(pk=doucment_id, user=user)
-            transactions = document.transaction_details.all()
+            balance_and_payment = get_object_or_404(
+                BalanceAndPayment,
+                document=document,
+                user=user,
+            )
+            credit_card_summary = get_object_or_404(
+                CreditCardSummary,
+                document=document,
+                user=user,
+            )
+            transactions = document.transaction_details.all().order_by(
+                "transaction_date"
+            )
 
             paginator = Paginator(transactions, 10)
 
@@ -104,6 +136,8 @@ def pagination_view(request):
 
             context = {
                 "document": document,
+                "balance_and_payment": balance_and_payment,
+                "credit_card_summary": credit_card_summary,
                 "transactions": transactions,
                 "page_obj": page_obj,
             }
@@ -211,96 +245,95 @@ def upload_doc(request):
                 print("Upload status: " + str(success))
 
                 if success:
-                    # if success, create a document variable that takes the file name
-                    job_id = start_document_analysis(s3_file_name)
-                    print("Job ID: " + job_id)
-
-                    # TODO: Change this to a better way of waiting for the job to complete
-                    # https://www.youtube.com/watch?v=kzOBNLzpRLE <--- Tuturial on how to setup invoking Lambda on uploads
-                    time.sleep(60)
+                    # TEST:
+                    # replace the following with the new code to get job_id
+                    # job_id = start_document_analysis(s3_file_name)
+                    # print("Job ID: " + job_id)
+                    # https://www.youtube.com/watch?v=kzobnlzprle <--- Tuturial on how to setup invoking Lambda on uploads
+                    # time.sleep(60)
+                    # WARNING: NEW CODE:
 
                     if doc_type == "Credit Card":
                         # Start the get_doc_analysis_results function to get the results of the analysis
-                        data_frames_dicts = get_doc_analysis_results(job_id)
+                        # data_frames_dicts = get_doc_analysis_results(job_id)
 
-                        # Create a document object in the database
-                        document, created = Document.objects.get_or_create(
+                        bank_instance, _ = Bank.objects.get_or_create(name="SCB")
+                        print("Bank Instance: " + str(bank_instance.name))
+
+                        # Ensure TransactionType instance
+                        transaction_type_instance, _ = (
+                            TransactionType.objects.get_or_create(name="Credit Card")
+                        )
+                        print(
+                            "Transaction Type Instance: "
+                            + str(transaction_type_instance.name)
+                        )
+
+                        document, _ = Document.objects.get_or_create(
                             date_uploaded=timezone.now(),
                             user=user,
                             name=file_name,
                             s3_file_name=s3_file_name,
+                            bank=bank_instance,
+                            transaction_type=transaction_type_instance,
+                        )
+                        print("Document: " + str(document))
+
+                        balance_and_payment, _ = (
+                            BalanceAndPayment.objects.get_or_create(
+                                user=user,
+                                document=document,
+                            )
                         )
 
-                        bank_and_payment, created = Document.objects.get_or_create(
-                            user=user,
-                            document=document,
+                        credit_card_summary, _ = (
+                            CreditCardSummary.objects.get_or_create(
+                                user=user,
+                                document=document,
+                            )
                         )
 
-                        credit_card_summary, created = Document.objects.get_or_create(
-                            user=user,
-                            document=document,
-                        )
+                        # WARNING: NEW CODE
+                        data_frames_dicts = process_doc(s3_file_name)
+                        if data_frames_dicts is None:
+                            form.add_error(
+                                None,
+                                "File upload failed. Please try again.",
+                            )
+                            return render(
+                                request,
+                                "upload_doc/partials/upload_doc_errors.html",
+                                context={"form": form},
+                            )
 
                         # Save the data to the all models with its relationships
                         try:
                             print("Saving data to models")
-                            # TODO: Consider adding Bank Type as a parameter instead of hardcoding
                             save_data_to_models(
                                 data_frames_dicts,
                                 document,
                                 credit_card_summary,
-                                bank_and_payment,
+                                balance_and_payment,
                             )
 
                         except Exception as e:
                             print("Error: " + str(e))
+                            form.add_error(
+                                None,
+                                "File upload failed. Please try again.",
+                            )
+                            return render(
+                                request,
+                                "upload_doc/partials/upload_doc_errors.html",
+                                context={"form": form},
+                            )
 
-                        context = {
-                            "message": "Uploaded succesfully",
-                            "job_id": job_id,
-                            "file_name": file_name,
-                            "document": document,
-                            "doc_type": doc_type,
-                        }
                         print("Redirecting to my_docs_detail")
                         return redirect(
                             "my_docs_detail",
                             pk=document.pk,
                             transaction_type_slug=document.transaction_type.slug,
                         )
-
-                    elif doc_type == "Bank Statement":
-                        # create a dataframe dic using get_doc_analysis_results_bs function and job_id as its parameter
-                        data_frames_dicts = get_doc_analysis_results_bs(job_id)
-
-                        # Debug:
-                        print("DataFrame Dicts:", data_frames_dicts)
-
-                        # create the document
-                        document, created = Document.objects.get_or_create(
-                            date_uploaded=timezone.now(),
-                            user=user,
-                        )
-                        # Save the data to all models with its relationships
-                        try:
-                            print("Saving data to models")
-                            save_data_to_models_bs(
-                                file_name, data_frames_dicts, document
-                            )
-                        except Exception as e:
-                            print("Error: " + str(e))
-                        context = {
-                            "message": "Uploaded succesfully",
-                            "job_id": job_id,
-                            "file_name": file_name,
-                            "document": document,
-                        }
-                        return render(
-                            request,
-                            "upload_doc/partials/upload_doc_get_result.html",
-                            context=context,
-                        )
-
                 else:
                     form.add_error(None, "File upload failed. Please try again.")
                     return render(

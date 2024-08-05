@@ -4,6 +4,7 @@ import logging
 from django.conf import settings
 import time
 import pandas as pd
+import json
 
 
 def upload_file_to_s3(file, bucket, object_name):
@@ -24,6 +25,7 @@ def upload_file_to_s3(file, bucket, object_name):
     except ClientError as e:
         logging.error(e)
         return False
+
     return True
 
 
@@ -89,7 +91,7 @@ def start_document_analysis(document):
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
     )
-    start_doc_analysis_respons = client.start_document_analysis(
+    start_doc_analysis_response = client.start_document_analysis(
         DocumentLocation={"S3Object": {"Bucket": bucket, "Name": document}},
         FeatureTypes=["TABLES", "FORMS"],
         NotificationChannel={
@@ -98,7 +100,7 @@ def start_document_analysis(document):
         },
     )
 
-    job_id = start_doc_analysis_respons["JobId"]
+    job_id = start_doc_analysis_response["JobId"]
 
     return job_id
 

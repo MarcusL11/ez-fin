@@ -1,12 +1,8 @@
 # data_saver.py
 from upload_doc.models import (
-    CreditCardSummary,
-    BalanceAndPayment,
     TransactionDetail,
     TransactionType,
     Bank,
-    AccountCategory,
-    GLAccount,
 )
 from django.core.exceptions import ObjectDoesNotExist
 import pandas as pd
@@ -18,33 +14,18 @@ def save_data_to_models(
     credit_card_summary,
     balance_and_payment,
 ):
-    credit_card_summary_df = data_frames["credit_card_summary"]
-    balance_and_payment_df = data_frames["balance_and_payment"]
-    transaction_details_df = data_frames["transaction_details"]
+    try:
+        credit_card_summary_df = data_frames["credit_card_summary"]
+        balance_and_payment_df = data_frames["balance_and_payment"]
+        transaction_details_df = data_frames["transaction_details"]
 
-    save_credit_card_summary(credit_card_summary, credit_card_summary_df)
-    save_balance_and_payment(balance_and_payment, balance_and_payment_df)
-    save_transaction_details(document, transaction_details_df)
-    save_document(document, credit_card_summary, balance_and_payment)
-
-
-def save_document(document, credit_card_summary, balance_and_payment):
-    # Ensure Bank instance
-    bank_instance, _ = Bank.objects.get_or_create(name="SCB")
-
-    # Ensure TransactionType instance
-    transaction_type_instance, _ = TransactionType.objects.get_or_create(
-        name="Credit Card"
-    )
-
-    # Update the document fields
-    document.bank = bank_instance
-    document.transaction_type = transaction_type_instance
-
-    # Save the updated document
-    document.save()
-
-    return document
+        save_credit_card_summary(credit_card_summary, credit_card_summary_df)
+        save_balance_and_payment(balance_and_payment, balance_and_payment_df)
+        save_transaction_details(document, transaction_details_df)
+    except Exception as e:
+        print(f"Error in save_data_to_models: {str(e)}")
+        print(f"data_frames: {data_frames}")
+        raise
 
 
 def save_credit_card_summary(credit_card_summary, df):
@@ -52,6 +33,9 @@ def save_credit_card_summary(credit_card_summary, df):
         credit_card_summary.card_number = row["Card Number"]
         credit_card_summary.credit_limit = row["Credit Limit"]
         credit_card_summary.closing_date = pd.to_datetime(row["Closing Date"]).date()
+        credit_card_summary.save()
+        print("Credit Card Summary saved successfully")
+        print(credit_card_summary)
 
     return credit_card_summary
 
@@ -61,6 +45,9 @@ def save_balance_and_payment(balance_and_payment, df):
         balance_and_payment.new_balance = row["New Balance"]
         balance_and_payment.minimum_payment = row["Minimum Payment"]
         balance_and_payment.payment_date = pd.to_datetime(row["Payment Date"]).date()
+        balance_and_payment.save()
+        print("Balance and Payment saved successfully")
+        print(balance_and_payment)
 
     return balance_and_payment
 
@@ -85,6 +72,8 @@ def save_transaction_details(document, df):
                 ending_balance=None,
                 saved=False,
             )
+            print("Transaction Details saved successfully")
+
     except ObjectDoesNotExist as e:
         print(f"Error: {e}")
     except Exception as e:
