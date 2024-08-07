@@ -11,6 +11,8 @@
     {% tailwind_css %}
     <script src="{% static 'js/dist/hyperscript.min.js' %}"></script>
     <script src="{% static 'js/dist/htmx.min.js' %}" defer></script> 
+    {% block extrahead %}
+    {% endblock extrahead %}
   </head> 
 
   <body class="min-h-screen flex flex-col" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>

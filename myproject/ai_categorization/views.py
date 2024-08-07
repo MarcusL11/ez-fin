@@ -5,7 +5,6 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 
 
-# TODO: Make sure that every POST requests only sends the the checked transactions, and not all transactions
 def ai_categorize(request):
     if request.method == "POST":
         transaction_ids = request.POST.getlist("transaction_ids")
@@ -26,7 +25,7 @@ def ai_categorize(request):
         # pagination
         transactions = document.transaction_details.all()
         paginator = Paginator(transactions, 10)
-        page_number = request.GET.get("page", 1)
+        page_number = request.POST.get("page", 1)
         page_obj = paginator.get_page(page_number)
         print("Page Number: " + str(page_number))
 

@@ -14,11 +14,19 @@
     hx-vals='{"page": "{{ page_obj.number }}"}'
     _="
       on htmx:beforeRequest
+        put 'Processing' into #ai-button-innerHTML
         add .hidden to #ai-icon then
         remove .hidden from #loading-button
       end
+      on htmx:afterRequest
+        put 'Categorize with' into #ai-button-innerHTML
+        add .hidden to #loading-button then
+        remove .hidden from #ai-icon then
+      end
     ">
-    Categorize with
+    <span id="ai-button-innerHTML">
+      Categorize with
+    </span>
     <img
       id="ai-icon" 
       src="{% static 'svg/ai_icon.svg' %}" 
