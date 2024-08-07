@@ -1,34 +1,92 @@
 {% extends "../dashboard/dashboard_base.html" %}
 {% load static %}
-{% block main %}
+  {% block main %}
 <section>
   <div 
-    class="border-2 border-primary rounded-xl overflow-x-auto"
+    class="border-2 border-primary p-4 rounded-xl overflow-x-auto"
     _="
-      def checkCheckboxes()
-        set anyChecked to false
-        for checkbox in <tbody input.checkbox/>
-          if checkbox.checked
-            set anyChecked to true
-            break
-          end
-        end
-        
-        if not anyChecked
-          if #select-all-checkbox.checked
-            set #select-all-checkbox.checked to false
-          end
-          set #delete-button @disabled to true
-        else
-          remove @disabled from #delete-button
-        end
+    def checkCheckboxes()
+      set anyChecked to false
+      for checkbox in <tbody input.checkbox/>
+      if checkbox.checked
+        set anyChecked to true
+        break
       end
+    end
 
-      on load
-        checkCheckboxes()
+    if not anyChecked
+      if #select-all-checkbox.checked
+        set #select-all-checkbox.checked to false
       end
+      set #delete-button @disabled to true
+    else
+      remove @disabled from #delete-button
+      end
+    end
+
+    on load
+      checkCheckboxes()
+    end
     "
   >
+    <div class="w-1/2 justify-center mx-auto">
+      <!-- Search Bar -->
+      <div class="relative mb-4">
+        <input type="text" placeholder="Search by Document Name" class="input border-1 border-primary input-bordered w-full pl-10 pr-4 bg-white rounded-full">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Filter Options -->
+      <div class="flex flex-wrap gap-2 mb-4">
+
+        <div class="dropdown">
+          <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">Document Type <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></label>
+          <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-52">
+            <li><a>Type 1</a></li>
+            <li><a>Type 2</a></li>
+            <!-- Add more options as needed -->
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">Bank <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></label>
+          <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-52">
+            <li><a>Bank 1</a></li>
+            <li><a>Bank 2</a></li>
+            <!-- Add more options as needed -->
+          </ul>
+        </div>
+
+
+        <div class="dropdown">
+          <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">
+            Uploaded Date 
+            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </label>
+          <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-64">
+            <li><a>Last 7 days</a></li>
+            <li><a>Last 30 days</a></li>
+            <li>
+              <div class="p-2">
+                <label for="after-date" class="block text-sm font-medium">After</label>
+                <input name="after-date" type="date" class="form-input rounded-xl mt-1 block w-full">
+              </div>
+              <div class="p-2">
+                <label for="before-date" class="block text-sm font-medium">Before</label>
+                <input name="before-date" type="date" class="form-input rounded-xl mt-1 block w-full">
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
     <table class="table">
       <!-- head -->
       <thead>
@@ -41,10 +99,10 @@
                 class="checkbox checkbox-xs"
                 _="
                 on click
-                  set .checkbox.checked to my.checked
+                set .checkbox.checked to my.checked
                 end
                 on change 
-                  call checkCheckboxes()
+                call checkCheckboxes()
                 end
                 "/>
             </label>
@@ -57,44 +115,44 @@
         </tr>
       </thead>
       <tbody id="document_table_body" name="document_table_body">
-      {% for document in documents %}
+        {% for document in documents %}
         <!-- row 1 -->
-          <tr>
-            <td>
-              <label>
-                <input type="checkbox" 
+        <tr>
+          <td>
+            <label>
+              <input type="checkbox" 
                 class="checkbox checkbox-xs"
                 name="document_ids"
                 value="{{ document.pk }}"
                 _="
-                  on change
-                    call checkCheckboxes()
-                  end
+                on change
+                call checkCheckboxes()
+                end
                 "/>
-              </label>
-            </td>
-            <td>
-              <div class="font-bold">{{ forloop.counter }}</div>
-            </td>
-            <td>
-              <div>
-                <div class="font-bold">{{ document.name }}</div>
-                <div class="text-xs opacity-50">Uploaded at: {{ document.date_uploaded|date:"M j, y"}}</div>
-              </div>
-            </td>
-            <td>
-              <div class="font-bold">{{ document.bank.name }}</div>
-            </td>
-            <td>
-              <div class="font-bold">{{ document.transaction_type.name }}</div>
-            </td>
-            <td>
-              <a href="{% url 'my_docs_detail' document.pk document.transaction_type.slug %}">
-                <button class="btn btn-primary">View</button>
-              </a>
-            </td>
-          </tr>
-      {% endfor %}
+            </label>
+          </td>
+          <td>
+            <div class="font-bold">{{ forloop.counter }}</div>
+          </td>
+          <td>
+            <div>
+              <div class="font-bold">{{ document.name }}</div>
+              <div class="text-xs opacity-50">Uploaded at: {{ document.date_uploaded|date:"M j, y"}}</div>
+            </div>
+          </td>
+          <td>
+            <div class="font-bold">{{ document.bank.name }}</div>
+          </td>
+          <td>
+            <div class="font-bold">{{ document.transaction_type.name }}</div>
+          </td>
+          <td>
+            <a href="{% url 'my_docs_detail' document.pk document.transaction_type.slug %}">
+              <button class="btn btn-primary">View</button>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>

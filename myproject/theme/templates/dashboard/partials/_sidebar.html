@@ -23,6 +23,12 @@
           <img src="{% static 'svg/home_icon.svg' %}" alt="Home" class="">
         </a>
       </li>
+      <!-- Dashboard -->
+      <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
+        <a href="{% url 'dashboard' %}" class=" rounded">         
+          <img src="{% static 'svg/dashboard_icon.svg' %}" alt="Dashboard" class="">
+        </a>
+      </li>
       <!-- Upload Doc -->
       <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
         <a href="{% url 'upload_doc' %}" class=" rounded">         

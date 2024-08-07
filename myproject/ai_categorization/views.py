@@ -23,7 +23,7 @@ def ai_categorize(request):
         print("Document ID: ", document.id)
 
         # pagination
-        transactions = document.transaction_details.all()
+        transactions = document.transaction_details.all().order_by("transaction_date")
         paginator = Paginator(transactions, 10)
         page_number = request.POST.get("page", 1)
         page_obj = paginator.get_page(page_number)
