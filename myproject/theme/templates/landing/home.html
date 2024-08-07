@@ -61,29 +61,81 @@
     <section 
       id="how-it-works" 
       class="py-16 pt-24 opacity-0"
-      _="
-      on intersection(intersecting) having threshold 0.5
-        if intersecting transition opacity to 1
-        end
-      end
-      ">
-      <div class="container mx-auto px-4 flex flex-col md:flex-row-reverse gap-x-4 items-center">
-        <div class="content w-full md:w-1/2">
-          <h2 class="text-3xl font-bold mb-6">How Does It Work?</h2>
-          <ol class="list-decimal list-inside space-y-4">
-            <li>Upload your PDF Statements.</li>
-            <li>We extract and return the relevent data.</li>
-            <li>Use AI to categorize each transactions.</li>
-            <li>Copy Paste the data into Excel or Download as a CSV file</li>
-          </ol>
-          {% if user.is_authenticated and user.has_verified_email %}
-          <a href="{% url 'upload_doc' %}"><button class="mt-8 btn btn-primary">Try Now!</button></a>
-          {% else %}
-          <a href="#sign-in"><button class="mt-8 btn btn-primary">Try Now!</button></a>
-          {% endif %}
+      _="on intersection(intersecting) having threshold 0.5
+      if intersecting transition opacity to 1 over 0.5s
+      end"
+    >
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">How Does It Work?</h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Step 1 -->
+          <div class="card bg-base-100 shadow-xl transition-transform duration-300 ease-in-out"
+            _="on mouseenter add .scale-105 to me
+            on mouseleave remove .scale-105 from me">
+            <figure class="px-10 pt-10">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </figure>
+            <div class="card-body items-center text-center">
+              <h3 class="card-title">Step 1: Upload Statements</h3>
+              <p>Upload your PDF Bank Statements (Credit Card or Bank Statements)</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="card bg-base-100 shadow-xl transition-transform duration-300 ease-in-out"
+            _="on mouseenter add .scale-105 to me
+            on mouseleave remove .scale-105 from me">
+            <figure class="px-10 pt-10">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+            </figure>
+            <div class="card-body items-center text-center">
+              <h3 class="card-title">Step 2: Extract Transactions</h3>
+              <p>We extract the content and return the transactions from your statements</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="card bg-base-100 shadow-xl transition-transform duration-300 ease-in-out"
+            _="on mouseenter add .scale-105 to me
+            on mouseleave remove .scale-105 from me">
+            <figure class="px-10 pt-10">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+            </figure>
+            <div class="card-body items-center text-center">
+              <h3 class="card-title">Step 3: Categorize Transactions</h3>
+              <p>Categorize your transactions manually or use our AI to auto-categorize</p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="card bg-base-100 shadow-xl transition-transform duration-300 ease-in-out"
+            _="on mouseenter add .scale-105 to me
+            on mouseleave remove .scale-105 from me">
+            <figure class="px-10 pt-10">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </figure>
+            <div class="card-body items-center text-center">
+              <h3 class="card-title">Step 4: Download or Copy</h3>
+              <p>Download the CSV file or copy and paste into your spreadsheet to manage your finances</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <img src="{% static 'svg/document_scan.svg'%}" alt="How It Works Mascot" class="mx-auto">
+
+        <div class="mt-12 text-center">
+          {% if user.is_authenticated and user.has_verified_email %}
+          <a href="{% url 'upload_doc' %}" class="btn btn-primary">Try Now!</a>
+          {% else %}
+          <a href="#sign-in" class="btn btn-primary">Try Now!</a>
+          {% endif %}
         </div>
       </div>
     </section>
@@ -160,7 +212,7 @@
         <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2> 
         <div class="join join-vertical w-full">
           <div 
-            class="collapse collapse-arrow join-item border-base-300 border" 
+            class="collapse collapse-arrow join-item border-base-300 border rounded-xl" 
             _="
             on click 
               toggle .collapse-open on me
@@ -174,7 +226,7 @@
         </div>
         <div class="join join-vertical w-full">
           <div 
-            class="collapse collapse-arrow join-item border-base-300 border" 
+            class="collapse collapse-arrow join-item border-base-300 border rounded-xl" 
             _="
             on click 
               toggle .collapse-open on me

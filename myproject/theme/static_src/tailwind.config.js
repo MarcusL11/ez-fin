@@ -45,7 +45,21 @@ module.exports = {
     extend: {},
   },
   daisyui: {
-    themes: ["light"],
+    themes: [
+      {
+        light: {
+          "primary": "#1a73e8",        // Trustworthy and professional blue
+          "secondary": "#28a745",      // Prosperous and secure green
+          "accent": "#17c3b2",         // Vibrant turquoise for highlights
+          "neutral": "#333333",        // Dark grey for readability and sleek look
+          "base-100": "#f4f4f4",       // Light grey background for cleanliness
+          "info": "#4a90e2",           // Light blue for informational messages
+          "success": "#34d058",        // Green for success messages
+          "warning": "#ffb020",        // Orange for warnings
+          "error": "#d73a49",          // Red for errors and critical alerts
+        },
+      },
+    ],
   },
   plugins: [
     /**
