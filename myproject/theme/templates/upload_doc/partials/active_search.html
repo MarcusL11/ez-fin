@@ -1,0 +1,23 @@
+<!-- Search Bar -->
+<div class="relative mb-4">
+  <input 
+    name="search_content"
+    type="search" 
+    placeholder="Search by Document Name" 
+    class="input border-1 border-primary input-bordered w-full pl-10 pr-4 bg-white rounded-full"
+    hx-post="{% url 'active_search' %}"
+    hx-target="#document_table"
+    hx-swap="outerHTML"
+    hx-trigger="input changed delay:500ms, search"
+    hx-indicator=".htmx-indicator"
+    hx-vals='{"app_name": "upload_doc", "model_name": "Document"}'
+  >
+  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    </svg>
+  </div>
+</div>
+<span class="htmx-indicator"> 
+  Searching... 
+  </span> 
