@@ -35,11 +35,52 @@ def my_docs(request):
     if not request.user.is_anonymous and request.user.has_verified_email:
         user = request.user
         # get documents of user
-        documents = Document.objects.filter(user=user).all()
-        context = {"documents": documents}
+        documents = Document.objects.filter(user=user).all().order_by("date_uploaded")
+
+        paginator = Paginator(documents, 10)
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+        print("Page Number: " + str(page_number))
+
+        context = {
+            "documents": documents,
+            "page_obj": page_obj,
+        }
         return render(request, "upload_doc/my_docs.html", context)
     else:
         return HttpResponseForbidden()
+
+
+def my_docs_pagination_view(request):
+    if request.method == "POST":
+        if not request.user.is_anonymous and request.user.has_verified_email:
+            user = request.user
+            request_next_page_number = request.POST.get("next_page_number")
+            request_previous_page_number = request.POST.get("previous_page_number")
+
+            print("Next page number: ", request_next_page_number)
+            print("Previous page number: ", request_previous_page_number)
+
+            document = Document.objects.filter(user=user).order_by("date_uploaded")
+
+            paginator = Paginator(document, 10)
+
+            if request_next_page_number is not None:
+                page_obj = paginator.get_page(request_next_page_number)
+            else:
+                page_obj = paginator.get_page(request_previous_page_number)
+
+            context = {
+                "document": document,
+                "page_obj": page_obj,
+            }
+            return render(
+                request, "upload_doc/partials/my_docs_pagination_view.html", context
+            )
+        else:
+            return HttpResponseForbidden()
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["POST"])
 
 
 def my_docs_detail(request, pk=None, transaction_type_slug=None):
