@@ -4,46 +4,46 @@
 <!-- Sidebar -->
 <aside id="sidebar" class="z-10 hidden lg:flex flex-col items-center bg-primary w-12 py-4 px-2 flex-shrink-0 sticky top-0 h-screen justify-between">
   <nav class="mt-6 flex flex-col items-center">
-    <ul 
+    <ul
       class="w-full space-y-4"
       _="
-      on load
-        set pathname to window.location.pathname
-        for li in <li/> in me
-          set linkPath to li.querySelector('a').getAttribute('href')
-          if pathname is linkPath
-            add .bg-secondary to li
-          end
-        end
-      end
-      ">
+         on load
+         set pathname to window.location.pathname
+         for li in <li/> in me
+         set linkPath to li.querySelector('a').getAttribute('href')
+         if pathname is linkPath
+         add .bg-secondary to li
+         end
+         end
+         end
+        ">
       <!-- Home -->
       <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
-        <a href="{% url 'home' %}" class=" rounded">         
+        <a href="{% url 'home' %}" class=" rounded">
           <img src="{% static 'svg/home_icon.svg' %}" alt="Home" class="">
         </a>
       </li>
       <!-- Dashboard -->
       <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
-        <a href="{% url 'dashboard' %}" class=" rounded">         
+        <a href="{% url 'dashboard' %}" class=" rounded">
           <img src="{% static 'svg/dashboard_icon.svg' %}" alt="Dashboard" class="">
         </a>
       </li>
       <!-- Upload Doc -->
       <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
-        <a href="{% url 'upload_doc' %}" class=" rounded">         
+        <a href="{% url 'upload_doc' %}" class=" rounded">
           <img src="{% static 'svg/upload_icon.svg' %}" alt="Upload Document" class="">
         </a>
       </li>
       <!-- My Docs -->
       <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
-        <a href="{% url 'my_docs' %}" class=" rounded">         
+        <a href="{% url 'my_docs' %}" class=" rounded">
           <img src="{% static 'svg/document_icon.svg' %}" alt="My Documents" class="">
         </a>
       </li>
       <!-- Categories -->
       <li class="mb-1 flex justify-center rounded-lg hover:bg-secondary">
-        <a href="{% url 'category_list' %}" class=" rounded">         
+        <a href="{% url 'category_list' %}" class=" rounded">
           <img src="{% static 'svg/tag_icon.svg' %}" alt="Categories" class="">
         </a>
       </li>

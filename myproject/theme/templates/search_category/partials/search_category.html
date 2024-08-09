@@ -1,20 +1,20 @@
 <div class="card bg-base-100">
   <ul class="menu w-64">
-    {% for category in matching_category %} 
-    <li 
-      class="hover:text-primary">
-      <div 
-        class=""
-        _="
-        on click
-        set #transaction_category_{{ transaction_id }}'s value to me.innerText then
-          add .hidden to #search_result_{{ transaction_id }}
-        end
-        ">
-        {{ category }}
-      </div>
-    </li>
-    {% endfor %} 
+    {% for category in matching_category %}
+      <li
+        class="hover:text-primary">
+        <div
+          class=""
+          _="
+             on click
+             set #transaction_category_{{ transaction_id }}'s value to me.innerText then
+             add .hidden to #search_result_{{ transaction_id }}
+             end
+            ">
+          {{ category }}
+        </div>
+      </li>
+    {% endfor %}
   </ul>
 </div>
 

@@ -6,11 +6,11 @@
         <!-- TODO: Add Hyperscript function to select all and deselect-->
         <label>
           <input type="checkbox" class="checkbox checkbox-xs"
-            _="
-            on click
-              set .checkbox.checked to my.checked
-            end
-            "/>
+                 _="
+                    on click
+                    set .checkbox.checked to my.checked
+                    end
+                   "/>
         </label>
       </th>
       <th>Bank</th>
@@ -26,73 +26,73 @@
   </thead>
   <tbody>
     {% for transaction in document.transaction_details.all %}
-    <tr>
-      <td>{{ forloop.counter }}</td> 
-      <td>
-        {% if transaction.saved %}
-        <input 
-          type="checkbox" 
-          class="checkbox checkbox-xs" 
-          disabled />
-        {% else%}
-        <input 
-          type="checkbox" 
-          class="checkbox checkbox-xs"
-          name="transaction_ids"
-          value="{{ transaction.id }}"
-          _="
-          on load 
-            set my.checked to false
-          end 
-          "/>
-        {% endif %}
-      </td>
-      <td>{{ document.bank.name }}</td>
-      <td>{{ document.transaction_type.name }}</td>
-      <td>{{ transaction.transaction_date }}</td>
-      <td>{{ transaction.description }}</td>
-      <td>
-        {% if transaction.amount < 0 %}
-          {{ transaction.amount|intcomma }}
-          {% else %}
-          0
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>
+          {% if transaction.saved %}
+            <input
+              type="checkbox"
+              class="checkbox checkbox-xs"
+              disabled />
+          {% else%}
+            <input
+              type="checkbox"
+              class="checkbox checkbox-xs"
+              name="transaction_ids"
+              value="{{ transaction.id }}"
+              _="
+                 on load
+                 set my.checked to false
+                 end
+                "/>
           {% endif %}
-      </td>
-      <td>
-        {% if transaction.amount > 0 %}
-        {{ transaction.amount|intcomma }}
-        {% else %}
-        0
-        {% endif %}
-      </td>
-      {% if transaction.expense_category.name %}
-      <td>{{ transaction.expense_category.name }}</td>
+        </td>
+        <td>{{ document.bank.name }}</td>
+        <td>{{ document.transaction_type.name }}</td>
+        <td>{{ transaction.transaction_date }}</td>
+        <td>{{ transaction.description }}</td>
+        <td>
+          {% if transaction.amount < 0 %}
+            {{ transaction.amount|intcomma }}
+          {% else %}
+            0
+          {% endif %}
+        </td>
+        <td>
+          {% if transaction.amount > 0 %}
+            {{ transaction.amount|intcomma }}
+          {% else %}
+            0
+          {% endif %}
+        </td>
+        {% if transaction.expense_category.name %}
+          <td>{{ transaction.expense_category.name }}</td>
       <!--TODO: Add HTMX function to edit category -->
-      <td>
-        <button class="">
-          <img src="{% static 'svg/edit_icon.svg' %}" alt="">
-        </button>
-      </td>
-      {% else %}
-      <td>
-        <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
-      </td>
-      <td>
-        <!--TODO: Add HTMX function to save category -->
-        <button class="">
-          <img src="{% static 'svg/save_icon.svg' %}" alt="">
-        </button>
-      </td>
-      {% endif %}
-
-      <td>
-        {% if transaction.saved %}
-        <span class="text-success">Saved</span>
+          <td>
+            <button class="">
+              <img src="{% static 'svg/edit_icon.svg' %}" alt="">
+            </button>
+          </td>
         {% else %}
-        <span class="text-error">Not Saved</span>
-      </td>
-      {% endif %}
-    </tr>
+          <td>
+            <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+          </td>
+          <td>
+        <!--TODO: Add HTMX function to save category -->
+            <button class="">
+              <img src="{% static 'svg/save_icon.svg' %}" alt="">
+            </button>
+          </td>
+        {% endif %}
+
+        <td>
+          {% if transaction.saved %}
+            <span class="text-success">Saved</span>
+          {% else %}
+            <span class="text-error">Not Saved</span>
+            </td>
+          {% endif %}
+        </tr>
     {% endfor %}
   </tbody>
 </table>

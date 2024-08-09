@@ -1,9 +1,9 @@
 <!-- Search Bar -->
 <div class="relative ">
-  <input 
+  <input
     name="search_content"
-    type="search" 
-    placeholder="Search by Document Name" 
+    type="search"
+    placeholder="Search by Document Name"
     class="input border-1 border-primary input-bordered w-full pl-10 pr-4 bg-white rounded-full"
     hx-post="{% url 'active_search' %}"
     hx-target="#pagination_view_result"
@@ -18,7 +18,7 @@
   </div>
 </div>
 <div class="mx-auto justify-center">
-  <span class="htmx-indicator bg-primary rounded-full px-2 py-1 text-xs"> 
-    Searching... 
+  <span class="htmx-indicator bg-primary rounded-full px-2 py-1 text-xs">
+    Searching...
   </span>
 </div>

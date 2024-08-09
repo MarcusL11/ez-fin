@@ -35,16 +35,16 @@
                   hx-vars='{"transaction_type_filter":"{{ type.transaction_type__pk }}"}'
                   hx-trigger="click"
                   _="
-                    on htmx:afterRequest
-                      toggle .invisible on #filter_tag_{{ type.transaction_type__pk }}
-                    end
-                  "
+                     on htmx:afterRequest
+                     toggle .invisible on #filter_tag_{{ type.transaction_type__pk }}
+                     end
+                    "
                 >
-                {{ type.transaction_type__name }}
+                  {{ type.transaction_type__name }}
                 </a>
               </li>
             {% endfor %}
-            
+
           </ul>
         </div>
 
@@ -62,7 +62,7 @@
         <!-- Uploaded Dates -->
         <div class="dropdown">
           <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">
-            Uploaded Date 
+            Uploaded Date
             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
@@ -89,24 +89,24 @@
         <p class="mr-2">Selected Filters: </p>
 
         {% for type in transaction_types %}
-        <div 
-          id="filter_tag_{{ type.transaction_type__pk }}"
-          class='invisible badge badge-primary text-white gap-2'>
-          <button>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              class='inline-block h-4 w-4 stroke-current'>
-              <path
-                stroke-linecap='round'
-                stroke-linejoin='round'
-                stroke-width='2'
-                d='M6 18L18 6M6 6l12 12'></path>
-            </svg>
-          </button>
-          {{ type.transaction_type__name }}
-        </div>
+          <div
+            id="filter_tag_{{ type.transaction_type__pk }}"
+            class='invisible badge badge-primary text-white gap-2'>
+            <button>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                class='inline-block h-4 w-4 stroke-current'>
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='2'
+                  d='M6 18L18 6M6 6l12 12'></path>
+              </svg>
+            </button>
+            {{ type.transaction_type__name }}
+          </div>
         {% endfor %}
 
       </div>
@@ -118,29 +118,29 @@
     <div
       class="border-2 border-primary p-4 rounded-xl overflow-x-auto"
       _="
-      def checkCheckboxes()
-        set anyChecked to false
-        for checkbox in <tbody input.checkbox/>
-          if checkbox.checked
-            set anyChecked to true
-            break
-          end
-        end
+         def checkCheckboxes()
+         set anyChecked to false
+         for checkbox in <tbody input.checkbox/>
+         if checkbox.checked
+         set anyChecked to true
+         break
+         end
+         end
 
-        if not anyChecked
-          if #select-all-checkbox.checked
-            set #select-all-checkbox.checked to false
-          end
-          set #delete-button @disabled to true
-        else
-          remove @disabled from #delete-button
-        end
-      end
+         if not anyChecked
+         if #select-all-checkbox.checked
+         set #select-all-checkbox.checked to false
+         end
+         set #delete-button @disabled to true
+         else
+         remove @disabled from #delete-button
+         end
+         end
 
-      on load
-        checkCheckboxes()
-      end
-      "
+         on load
+         checkCheckboxes()
+         end
+        "
     >
       <table id="document_table" class="table">
         <!-- head -->
@@ -150,16 +150,16 @@
               <label>
                 <input
                   id="select-all-checkbox"
-                  type="checkbox" 
+                  type="checkbox"
                   class="checkbox checkbox-xs"
                   _="
-                  on click
-                    set .checkbox.checked to my.checked
-                  end
-                  on change 
-                    call checkCheckboxes()
-                  end
-                  "/>
+                     on click
+                     set .checkbox.checked to my.checked
+                     end
+                     on change
+                     call checkCheckboxes()
+                     end
+                    "/>
               </label>
             </th>
             <th>Name</th>
@@ -171,47 +171,47 @@
         <tbody id="document_table_body" name="document_table_body">
           {% for document in page_obj %}
           <!-- row 1 -->
-          <tr>
-            <td>
-              <label>
-                <input type="checkbox" 
-                  class="checkbox checkbox-xs"
-                  name="document_ids"
-                  value="{{ document.pk }}"
-                  _="
-                  on change
-                    call checkCheckboxes()
-                  end
-                  "/>
-              </label>
-            </td>
-            <td>
-              <div>
-                <div class="font-bold">{{ document.name }}</div>
-                <div class="text-xs opacity-50">Uploaded at: {{ document.date_uploaded|date:"M j, y"}}</div>
-              </div>
-            </td>
-            <td>
-              <div class="font-bold">{{ document.bank.name }}</div>
-            </td>
-            <td>
-              <div class="font-bold">{{ document.transaction_type.name }}</div>
-            </td>
-            <td>
-              <a href="{% url 'my_docs_detail' document.pk document.transaction_type.slug %}">
-                <button class="btn btn-primary">View</button>
-              </a>
-            </td>
-          </tr>
+            <tr>
+              <td>
+                <label>
+                  <input type="checkbox"
+                         class="checkbox checkbox-xs"
+                         name="document_ids"
+                         value="{{ document.pk }}"
+                         _="
+                            on change
+                            call checkCheckboxes()
+                            end
+                           "/>
+                </label>
+              </td>
+              <td>
+                <div>
+                  <div class="font-bold">{{ document.name }}</div>
+                  <div class="text-xs opacity-50">Uploaded at: {{ document.date_uploaded|date:"M j, y"}}</div>
+                </div>
+              </td>
+              <td>
+                <div class="font-bold">{{ document.bank.name }}</div>
+              </td>
+              <td>
+                <div class="font-bold">{{ document.transaction_type.name }}</div>
+              </td>
+              <td>
+                <a href="{% url 'my_docs_detail' document.pk document.transaction_type.slug %}">
+                  <button class="btn btn-primary">View</button>
+                </a>
+              </td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
     <div class="flex gap-x-4">
       <div class="my-4">
-        <button 
-          id="delete-button" 
-          class="btn btn-primary" 
+        <button
+          id="delete-button"
+          class="btn btn-primary"
           disable
           hx-post="{% url 'delete_doc' %}"
           hx-swap="outerHTML"

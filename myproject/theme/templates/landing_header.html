@@ -11,7 +11,7 @@
     {% if user.is_authenticated and user.has_verified_email %}
       <a href="{% url 'upload_doc' %}" class="btn btn-primary">Dashboard</a>
     {% else %}
-    <a href="#sign-in" class="btn btn-primary">Get Started</a>
+      <a href="#sign-in" class="btn btn-primary">Get Started</a>
     {% endif %}
   </div>
 </div>

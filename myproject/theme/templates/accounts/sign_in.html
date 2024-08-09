@@ -4,36 +4,36 @@
       <h2 class="text-3xl font-bold text-center mb-8">Get Started</h2>
       <p>We'll send a log-in link to verify your e-mail</p>
     </div>
-    <form 
-      class="max-w-md mx-auto" 
-      hx-post="{% url 'sign_in' %}" 
+    <form
+      class="max-w-md mx-auto"
+      hx-post="{% url 'sign_in' %}"
       hx-target="#sign-in-result"
       hx-swap="innerHTML"
       _="
-        on htmx:beforeRequest
-          add .hidden to #login-text then
-          remove .hidden from #loading-text
-        end
-        on htmx:afterRequest
-          add .hidden to #loading-text then
-          remove .hidden from #login-text
-        end
-      " 
+         on htmx:beforeRequest
+         add .hidden to #login-text then
+         remove .hidden from #loading-text
+         end
+         on htmx:afterRequest
+         add .hidden to #loading-text then
+         remove .hidden from #login-text
+         end
+        "
 
       {% csrf_token %}
       <div class="form-control">
-        <label class="label">
-          <span class="label-text">Email</span>
-        </label>
-        <input type="email" name="email" placeholder="your@email.com" class="input input-bordered" required />
-      </div>
-      <div class="form-control mt-6">
-        <button id="login-btn" class="btn btn-primary" type="submit">
-          <span id="login-text">Send Log-in Link</span>
-          <span id="loading-text" class="loading loading-dots loading-lg hidden"></span>
-        </button>
-      </div>
-      <div id="sign-in-result"></div>
-    </form>
-  </div>
+      <label class="label">
+        <span class="label-text">Email</span>
+      </label>
+      <input type="email" name="email" placeholder="your@email.com" class="input input-bordered" required />
+    </div>
+    <div class="form-control mt-6">
+      <button id="login-btn" class="btn btn-primary" type="submit">
+        <span id="login-text">Send Log-in Link</span>
+        <span id="loading-text" class="loading loading-dots loading-lg hidden"></span>
+      </button>
+    </div>
+    <div id="sign-in-result"></div>
+  </form>
+</div>
 </section>

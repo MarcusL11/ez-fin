@@ -2,10 +2,10 @@
 {% load static %}
 <div class="flex items-center space-x-1">
   <!--  AI categorize Button -->
-  <button 
+  <button
     id="ai-button"
     disabled
-    class="btn btn-primary" 
+    class="btn btn-primary"
     hx-post="{% url 'ai_categorize' %}"
     hx-target="#pagination_view_result"
     hx-swap="outerHTML"
@@ -13,94 +13,94 @@
     hx-include="[name='transaction_table_body']"
     hx-vals='{"page": "{{ page_obj.number }}"}'
     _="
-      on htmx:beforeRequest
-        put 'Processing' into #ai-button-innerHTML
-        add .hidden to #ai-icon then
-        remove .hidden from #loading-button
-      end
-      on htmx:afterRequest
-        put 'Categorize with' into #ai-button-innerHTML
-        add .hidden to #loading-button then
-        remove .hidden from #ai-icon then
-      end
-    ">
+       on htmx:beforeRequest
+       put 'Processing' into #ai-button-innerHTML
+       add .hidden to #ai-icon then
+       remove .hidden from #loading-button
+       end
+       on htmx:afterRequest
+       put 'Categorize with' into #ai-button-innerHTML
+       add .hidden to #loading-button then
+       remove .hidden from #ai-icon then
+       end
+      ">
     <span id="ai-button-innerHTML">
       Categorize with
     </span>
     <img
-      id="ai-icon" 
-      src="{% static 'svg/ai_icon.svg' %}" 
-      alt="ai icon" 
+      id="ai-icon"
+      src="{% static 'svg/ai_icon.svg' %}"
+      alt="ai icon"
       class="max-w-[25px] max-h-[25px]">
-    <span 
-      id="loading-button" 
+    <span
+      id="loading-button"
       class="hidden loading loading-dots loading-sm">
     </span>
   </button>
   <!-- Copy to Clipboard Button -->
-  <button 
-    id="copy-button" 
-    onclick="copyTableToClipboard()" 
+  <button
+    id="copy-button"
+    onclick="copyTableToClipboard()"
     class="btn btn-primary"
     _="
-    on click
-      put 'Copied!' into me
-      wait 2s
-      put 'Copy Table' into me
-    end
-    ">
+       on click
+       put 'Copied!' into me
+       wait 2s
+       put 'Copy Table' into me
+       end
+      ">
     Copy Table
     <img src="{% static 'svg/copy_icon.svg' %}" alt="" class="max-w-[25px] max-h-[25px]">
   </button>
   <!-- Download CSV button-->
-  <a href="{% url 'download_csv' document.id %}" class="block py-2.5 rounded">         
-    <button 
+  <a href="{% url 'download_csv' document.id %}" class="block py-2.5 rounded">
+    <button
       class="btn btn-primary"
       _="
-      on click
-        put 'Downloaded!' into me
-        wait 2s
-        put 'Download' into me
-      end
-      ">
+         on click
+         put 'Downloaded!' into me
+         wait 2s
+         put 'Download' into me
+         end
+        ">
       Download
       <img src="{% static 'svg/csv_icon.svg' %}" alt="" class="max-w-[25px] max-h-[25px]">
     </button>
-  </a> 
+  </a>
 </div>
 <!-- Pagination -->
 <div class="text-center">
   <div class="join">
     {% if page_obj.has_previous %}
-    <button 
-      class="join-item btn hover:bg-primary"
-      hx-post="{% url 'pagination_view' %}"
-      hx-swap="outerHTML"
-      hx-target="#pagination_view_result"
-      hx-vals='{
-      "previous_page_number": "{{ page_obj.previous_page_number }}",
-      "document_id": "{{ document.id }}"
-      }'>
-      «
-    </button>
+      <button
+        class="join-item btn hover:bg-primary"
+        hx-post="{% url 'pagination_view' %}"
+        hx-swap="outerHTML"
+        hx-target="#pagination_view_result"
+        hx-vals='{
+                 "previous_page_number": "{{ page_obj.previous_page_number }}",
+                 "document_id": "{{ document.id }}"
+                 }'>
+        «
+      </button>
     {% else %}
-    <button class="join-item btn btn-disabled">«</button>
+      <button class="join-item btn btn-disabled">«</button>
     {% endif %}
     <button class="join-item btn">Page {{ page_obj.number  }} of {{ page_obj.paginator.num_pages }}</button>
     {% if page_obj.has_next %}
-    <button 
-      class="join-item btn hover:bg-primary"
-      hx-post="{% url 'pagination_view' %}"
-      hx-swap="outerHTML"
-      hx-target="#pagination_view_result"
-      hx-vals='{
-      "next_page_number": "{{ page_obj.next_page_number }}",
-      "document_id": "{{ document.id }}"
-      }'>
-      »
-    </button>
+      <button
+        class="join-item btn hover:bg-primary"
+        hx-post="{% url 'pagination_view' %}"
+        hx-swap="outerHTML"
+        hx-target="#pagination_view_result"
+        hx-vals='{
+                 "next_page_number": "{{ page_obj.next_page_number }}",
+                 "document_id": "{{ document.id }}"
+                 }'>
+        »
+      </button>
     {% else %}
-    <button class="join-item btn btn-disabled">»</button>
+      <button class="join-item btn btn-disabled">»</button>
     {% endif %}
   </div>
 </div>

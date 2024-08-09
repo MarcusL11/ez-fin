@@ -1,26 +1,26 @@
 {% load static %}
-{% load humanize %} 
+{% load humanize %}
 <tr id="transaction_row_{{ transaction.id}}">
   <td>
     {% if transaction.saved %}
-    <input 
-      type="checkbox" 
-      class="checkbox checkbox-xs" 
-      disabled />
+      <input
+        type="checkbox"
+        class="checkbox checkbox-xs"
+        disabled />
     {% else%}
-    <input 
-      type="checkbox" 
-      class="checkbox checkbox-xs"
-      name="transaction_ids"
-      value="{{ transaction.id }}"
-      _="
-      on load 
-      set my.checked to false
-      end 
-      on change 
-      call checkCheckboxes()
-      end
-      "/>
+      <input
+        type="checkbox"
+        class="checkbox checkbox-xs"
+        name="transaction_ids"
+        value="{{ transaction.id }}"
+        _="
+           on load
+           set my.checked to false
+           end
+           on change
+           call checkCheckboxes()
+           end
+          "/>
     {% endif %}
   </td>
   <td>{{ document.bank.name }}</td>
@@ -30,8 +30,8 @@
   <td>{{ transaction.amount|intcomma }}</td>
   <td>
     <div class="data_inputs_{{ transaction.id }}">
-      <input 
-        type="search" 
+      <input
+        type="search"
         id="transaction_category_{{ transaction.id }}"
         name="transaction_category"
         placeholder="Type here"
@@ -42,24 +42,24 @@
         hx-swap="innerHTML"
         hx-vals='{"transaction_id" : "{{ transaction.id }}"}'
         _="
-        on click
-          set my @placeholder to ''
-        end
-        on keyup
-          remove .hidden from #search_result_{{ transaction.id }}
-        end
-        on keyup[key is 'Enter']
-          trigger click on the next .btn
-        end
-        on keyup[key is 'Escape']
-          add .hidden to #search_result_{{ transaction.id }} then
-          set my value to '{{ transaction.expense_category.name }}' then
-          trigger click on the next .btn
-        end
-        "
+           on click
+           set my @placeholder to ''
+           end
+           on keyup
+           remove .hidden from #search_result_{{ transaction.id }}
+           end
+           on keyup[key is 'Enter']
+           trigger click on the next .btn
+           end
+           on keyup[key is 'Escape']
+           add .hidden to #search_result_{{ transaction.id }} then
+           set my value to '{{ transaction.expense_category.name }}' then
+           trigger click on the next .btn
+           end
+          "
       />
-      <div 
-        class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary" 
+      <div
+        class="hidden absolute z-50 overflow-auto max-h-32 rounded-xl border-2 border-primary"
         id="search_result_{{ transaction.id }}"
       >
         <!-- Response from HTMX active search component -->

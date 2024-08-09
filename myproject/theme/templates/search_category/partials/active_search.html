@@ -3,29 +3,29 @@
   <div
     class="border-2 border-primary p-4 rounded-xl overflow-x-auto"
     _="
-    def checkCheckboxes()
-      set anyChecked to false
-      for checkbox in <tbody input.checkbox/>
-        if checkbox.checked
-          set anyChecked to true
-          break
-        end
-      end
+       def checkCheckboxes()
+       set anyChecked to false
+       for checkbox in <tbody input.checkbox/>
+       if checkbox.checked
+       set anyChecked to true
+       break
+       end
+       end
 
-      if not anyChecked
-        if #select-all-checkbox.checked
-          set #select-all-checkbox.checked to false
-        end
-        set #delete-button @disabled to true
-      else
-        remove @disabled from #delete-button
-      end
-    end
+       if not anyChecked
+       if #select-all-checkbox.checked
+       set #select-all-checkbox.checked to false
+       end
+       set #delete-button @disabled to true
+       else
+       remove @disabled from #delete-button
+       end
+       end
 
-    on load
-      checkCheckboxes()
-    end
-    "
+       on load
+       checkCheckboxes()
+       end
+      "
   >
     <table id="document_table" class="table">
       <!-- head -->
@@ -35,16 +35,16 @@
             <label>
               <input
                 id="select-all-checkbox"
-                type="checkbox" 
+                type="checkbox"
                 class="checkbox checkbox-xs"
                 _="
-                on click
-                  set .checkbox.checked to my.checked
-                end
-                on change 
-                  call checkCheckboxes()
-                end
-                "/>
+                   on click
+                   set .checkbox.checked to my.checked
+                   end
+                   on change
+                   call checkCheckboxes()
+                   end
+                  "/>
             </label>
           </th>
           <th>Name</th>
@@ -56,47 +56,47 @@
       <tbody id="document_table_body" name="document_table_body">
         {% for document in page_obj %}
         <!-- row 1 -->
-        <tr>
-          <td>
-            <label>
-              <input type="checkbox" 
-                class="checkbox checkbox-xs"
-                name="document_ids"
-                value="{{ document.pk }}"
-                _="
-                on change
-                  call checkCheckboxes()
-                end
-                "/>
-            </label>
-          </td>
-          <td>
-            <div>
-              <div class="font-bold">{{ document.name }}</div>
-              <div class="text-xs opacity-50">Uploaded at: {{ document.date_uploaded|date:"M j, y"}}</div>
-            </div>
-          </td>
-          <td>
-            <div class="font-bold">{{ document.bank.name }}</div>
-          </td>
-          <td>
-            <div class="font-bold">{{ document.transaction_type.name }}</div>
-          </td>
-          <td>
-            <a href="{% url 'my_docs_detail' document.pk document.transaction_type.slug %}">
-              <button class="btn btn-primary">View</button>
-            </a>
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <label>
+                <input type="checkbox"
+                       class="checkbox checkbox-xs"
+                       name="document_ids"
+                       value="{{ document.pk }}"
+                       _="
+                          on change
+                          call checkCheckboxes()
+                          end
+                         "/>
+              </label>
+            </td>
+            <td>
+              <div>
+                <div class="font-bold">{{ document.name }}</div>
+                <div class="text-xs opacity-50">Uploaded at: {{ document.date_uploaded|date:"M j, y"}}</div>
+              </div>
+            </td>
+            <td>
+              <div class="font-bold">{{ document.bank.name }}</div>
+            </td>
+            <td>
+              <div class="font-bold">{{ document.transaction_type.name }}</div>
+            </td>
+            <td>
+              <a href="{% url 'my_docs_detail' document.pk document.transaction_type.slug %}">
+                <button class="btn btn-primary">View</button>
+              </a>
+            </td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
   <div class="flex gap-x-4">
     <div class="my-4">
-      <button 
-        id="delete-button" 
-        class="btn btn-primary" 
+      <button
+        id="delete-button"
+        class="btn btn-primary"
         disable
         hx-post="{% url 'delete_doc' %}"
         hx-swap="outerHTML"

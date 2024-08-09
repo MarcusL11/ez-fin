@@ -1,70 +1,70 @@
 {% extends 'dashboard/dashboard_base.html' %}
 {% block main %}
 
-<div class="container mx-auto px-4 py-8 border-2 border-primary rounded-xl">
-  <h1 class="text-3xl font-bold text-center mb-8">How It Works</h1>
-  
-  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div class="container mx-auto px-4 py-8 border-2 border-primary rounded-xl">
+    <h1 class="text-3xl font-bold text-center mb-8">How It Works</h1>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
     <!-- Step 1 -->
-    <div 
-      class="card bg-base-100 shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
-      <figure class="px-10 pt-10">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-        </svg>
-      </figure>
-      <div class="card-body items-center text-center">
-        <h2 class="card-title">Step 1: Upload Statements</h2>
-        <p>Upload your PDF Bank Statements (Credit Card or Bank Statements)</p>
+      <div
+        class="card bg-base-100 shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
+        <figure class="px-10 pt-10">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        </figure>
+        <div class="card-body items-center text-center">
+          <h2 class="card-title">Step 1: Upload Statements</h2>
+          <p>Upload your PDF Bank Statements (Credit Card or Bank Statements)</p>
+        </div>
       </div>
-    </div>
 
     <!-- Step 2 -->
-    <div class="card bg-base-100 shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
-      <figure class="px-10 pt-10">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-        </svg>
-      </figure>
-      <div class="card-body items-center text-center">
-        <h2 class="card-title">Step 2: Extract Transactions</h2>
-        <p>We extract the content and return the transactions from your statements</p>
+      <div class="card bg-base-100 shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
+        <figure class="px-10 pt-10">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+          </svg>
+        </figure>
+        <div class="card-body items-center text-center">
+          <h2 class="card-title">Step 2: Extract Transactions</h2>
+          <p>We extract the content and return the transactions from your statements</p>
+        </div>
       </div>
-    </div>
 
     <!-- Step 3 -->
-    <div class="card bg-base-100 shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
-      <figure class="px-10 pt-10">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-        </svg>
-      </figure>
-      <div class="card-body items-center text-center">
-        <h2 class="card-title">Step 3: Categorize Transactions</h2>
-        <p>Categorize your transactions manually or use our AI to auto-categorize*</p>
-        <div class="text-sm mt-2">
-          <a href="{% url 'category_list' %}" class="link link-primary">Create your categories first</a>
+      <div class="card bg-base-100 shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
+        <figure class="px-10 pt-10">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+          </svg>
+        </figure>
+        <div class="card-body items-center text-center">
+          <h2 class="card-title">Step 3: Categorize Transactions</h2>
+          <p>Categorize your transactions manually or use our AI to auto-categorize*</p>
+          <div class="text-sm mt-2">
+            <a href="{% url 'category_list' %}" class="link link-primary">Create your categories first</a>
+          </div>
+        </div>
+      </div>
+
+    <!-- Step 4 -->
+      <div class="card bg-base-100 shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
+        <figure class="px-10 pt-10">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </figure>
+        <div class="card-body items-center text-center">
+          <h2 class="card-title">Step 4: Download or Copy</h2>
+          <p>Download the CSV file or copy and paste into your Google Sheet or Excel Sheet to manage your personal finance and spending</p>
         </div>
       </div>
     </div>
 
-    <!-- Step 4 -->
-    <div class="card bg-base-100 shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
-      <figure class="px-10 pt-10">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      </figure>
-      <div class="card-body items-center text-center">
-        <h2 class="card-title">Step 4: Download or Copy</h2>
-        <p>Download the CSV file or copy and paste into your Google Sheet or Excel Sheet to manage your personal finance and spending</p>
-      </div>
+    <div class="mt-8 text-center text-sm">
+      <p>* You must create your list of categories first before using the AI Auto Categorization function.</p>
     </div>
   </div>
-
-  <div class="mt-8 text-center text-sm">
-    <p>* You must create your list of categories first before using the AI Auto Categorization function.</p>
-  </div>
-</div>
 
 {% endblock main %}

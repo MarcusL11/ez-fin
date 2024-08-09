@@ -10,10 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% tailwind_css %}
     <script src="{% static 'js/dist/hyperscript.min.js' %}"></script>
-    <script src="{% static 'js/dist/htmx.min.js' %}" defer></script> 
+    <script src="{% static 'js/dist/htmx.min.js' %}" defer></script>
     {% block extrahead %}
     {% endblock extrahead %}
-  </head> 
+  </head>
 
   <body class="min-h-screen flex flex-col" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <header class="navbar sticky top-0 z-50">
