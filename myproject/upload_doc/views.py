@@ -9,15 +9,9 @@ from django.conf import settings
 from pathvalidate import sanitize_filename
 from utilities.amazon_textract.amz_textract_scb_cc import (
     upload_file_to_s3,
-    start_document_analysis,
-    get_doc_analysis_results,
 )
 from .forms import UploadFileForm
 from utilities.amazon_textract.amz_data_saver_scb_cc import save_data_to_models
-from utilities.amazon_textract.amz_data_saver_scb_bs import save_data_to_models_bs
-from utilities.amazon_textract.amz_textract_scb_bs import (
-    get_doc_analysis_results_bs,
-)
 from utilities.amazon_textract.amazon_docs import main as process_doc
 from .models import (
     Document,
@@ -34,23 +28,53 @@ from django.shortcuts import redirect
 def my_docs(request):
     if not request.user.is_anonymous and request.user.has_verified_email:
         user = request.user
-        # get documents of user
         documents = Document.objects.filter(user=user).all().order_by("date_uploaded")
+        transaction_types = (
+            documents.values_list("transaction_type__name", flat=True)
+            .distinct()
+            .order_by("transaction_type__name")
+        )
 
-        paginator = Paginator(documents, 10)
-        page_number = request.GET.get("page", 1)
-        page_obj = paginator.get_page(page_number)
-        print("Page Number: " + str(page_number))
+        banks = (
+            documents.values_list("bank__name", flat=True)
+            .distinct()
+            .order_by("bank__name")
+        )
 
-        context = {
-            "documents": documents,
-            "page_obj": page_obj,
-        }
-        return render(request, "upload_doc/my_docs.html", context)
+        if request.method == "GET":
+            paginator = Paginator(documents, 10)
+            page_number = request.GET.get("page", 1)
+            page_obj = paginator.get_page(page_number)
+
+            context = {
+                "documents": documents,
+                "page_obj": page_obj,
+                "transaction_types": transaction_types,
+                "banks": banks,
+            }
+
+            return render(request, "upload_doc/my_docs.html", context)
+
+        # TODO: Move this to my_docs_pagination_view so pagination will be done on filtered items
+        if request.method == "POST":
+            paginator = Paginator(documents, 10)
+            page_number = request.GET.get("page", 1)
+            page_obj = paginator.get_page(page_number)
+            print("Page Number: " + str(page_number))
+
+            context = {
+                "documents": documents,
+                "page_obj": page_obj,
+                "transaction_types": transaction_types,
+                "banks": banks,
+            }
+            return render(request, "upload_doc/my_docs.html", context)
+
     else:
         return HttpResponseForbidden()
 
 
+# TODO: Convert to reusable component
 def my_docs_pagination_view(request):
     if request.method == "POST":
         if not request.user.is_anonymous and request.user.has_verified_email:
@@ -140,7 +164,7 @@ def my_docs_detail(request, pk=None, transaction_type_slug=None):
         return HttpResponseNotAllowed(permitted_methods=["GET"])
 
 
-# TODO: Change this to be a view with parameters to define the page number and the document id
+# TODO: Convert to reusable component
 def pagination_view(request):
     if request.method == "POST":
         if not request.user.is_anonymous and request.user.has_verified_email:
@@ -286,14 +310,6 @@ def upload_doc(request):
                 print("Upload status: " + str(success))
 
                 if success:
-                    # TEST:
-                    # replace the following with the new code to get job_id
-                    # job_id = start_document_analysis(s3_file_name)
-                    # print("Job ID: " + job_id)
-                    # https://www.youtube.com/watch?v=kzobnlzprle <--- Tuturial on how to setup invoking Lambda on uploads
-                    # time.sleep(60)
-                    # WARNING: NEW CODE:
-
                     if doc_type == "Credit Card":
                         # Start the get_doc_analysis_results function to get the results of the analysis
                         # data_frames_dicts = get_doc_analysis_results(job_id)
@@ -334,7 +350,6 @@ def upload_doc(request):
                             )
                         )
 
-                        # WARNING: NEW CODE
                         data_frames_dicts = process_doc(s3_file_name)
                         if data_frames_dicts is None:
                             form.add_error(

@@ -1,27 +1,102 @@
 {% extends "../dashboard/dashboard_base.html" %}
 {% load static %}
   {% block main %}
-<section 
-  id="pagination_view_result">
-  <div 
+<section>
+  <div class="w-1/2 justify-center mx-auto">
+
+    {% include 'upload_doc/partials/active_search.html' %}
+
+    <!-- Filter Options -->
+    <div class="flex flex-wrap gap-2 mb-4">
+
+
+      <!-- Document Types -->
+      <div class="dropdown">
+        <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">Document Type <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></label>
+        <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-52">
+          {% for type in transaction_types %}
+            <li class="hover:text-white hover:bg-primary rounded-lg p-1">{{ type }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Banks -->
+      <div class="dropdown">
+        <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">Bank <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></label>
+        <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-52">
+          {% for bank in banks %}
+            <li class="hover:text-white hover:bg-primary rounded-lg p-1">{{ bank }}</li>
+          {% endfor %}
+          <!-- Add more options as needed -->
+        </ul>
+      </div>
+
+      <!-- Uploaded Dates -->
+      <div class="dropdown">
+        <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">
+          Uploaded Date 
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </label>
+        <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-64">
+          <li>Last 7 days</li>
+          <li>Last 30 days</li>
+          <li>
+            <div class="p-2">
+              <label for="after-date" class="block text-sm font-medium">After</label>
+              <input name="after-date" type="date" class="form-input rounded-xl mt-1 block w-full">
+            </div>
+            <div class="p-2">
+              <label for="before-date" class="block text-sm font-medium">Before</label>
+              <input name="before-date" type="date" class="form-input rounded-xl mt-1 block w-full">
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    <!-- Selected filters section show as tags -->
+    <div class="flex">
+      <!-- 
+            TODO: Objective 1: Filter the documents based on the selected filters
+            TODO: Objective 2: Create a section that shows the user what filters they've selected via tags
+            TODO: Objective 3: Allowing users to remove the selected filters by clicking on the tags "x" 
+
+            NOTE: This should be directed to the my_doc_pagination view to filter the documents based on the selected filters and allow pagination navigation
+            Task Planning:
+            1. Adjust my_doc views to correctly show what can be filtered for each filter (i.e. banks, document types)
+            2. Correct the my_doc HTML template with the filer's variable context
+            3. Adjust the list items of each filter dropdown by adding htmx attributes to send a request to the active_search views with values
+            4. Adjust the active_search views to accept the request.POST data and filter the documents based on the selected filters
+            5.
+        -->
+
+    </div>
+  </div>
+</section>
+
+<section id="pagination_view_result">
+  <!-- Document Table -->
+  <div
     class="border-2 border-primary p-4 rounded-xl overflow-x-auto"
     _="
     def checkCheckboxes()
       set anyChecked to false
       for checkbox in <tbody input.checkbox/>
-      if checkbox.checked
-        set anyChecked to true
-        break
+        if checkbox.checked
+          set anyChecked to true
+          break
+        end
       end
-    end
 
-    if not anyChecked
-      if #select-all-checkbox.checked
-        set #select-all-checkbox.checked to false
-      end
-      set #delete-button @disabled to true
-    else
-      remove @disabled from #delete-button
+      if not anyChecked
+        if #select-all-checkbox.checked
+          set #select-all-checkbox.checked to false
+        end
+        set #delete-button @disabled to true
+      else
+        remove @disabled from #delete-button
       end
     end
 
@@ -30,61 +105,7 @@
     end
     "
   >
-    <div class="w-1/2 justify-center mx-auto">
-
-      {% include 'upload_doc/partials/active_search.html' %}
-
-      <!-- Filter Options -->
-      <div class="flex flex-wrap gap-2 mb-4">
-
-        <div class="dropdown">
-          <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">Document Type <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></label>
-          <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-52">
-            <li><a>Type 1</a></li>
-            <li><a>Type 2</a></li>
-            <!-- Add more options as needed -->
-          </ul>
-        </div>
-
-        <div class="dropdown">
-          <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">Bank <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></label>
-          <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-52">
-            <li><a>Bank 1</a></li>
-            <li><a>Bank 2</a></li>
-            <!-- Add more options as needed -->
-          </ul>
-        </div>
-
-
-        <div class="dropdown">
-          <label tabindex="0" class="btn btn-primary text-white rounded-full m-1">
-            Uploaded Date 
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </label>
-          <ul tabindex="0" class="dropdown-content z-[1] border-2 border-primary menu p-2 shadow bg-base-100 rounded-box w-64">
-            <li><a>Last 7 days</a></li>
-            <li><a>Last 30 days</a></li>
-            <li>
-              <div class="p-2">
-                <label for="after-date" class="block text-sm font-medium">After</label>
-                <input name="after-date" type="date" class="form-input rounded-xl mt-1 block w-full">
-              </div>
-              <div class="p-2">
-                <label for="before-date" class="block text-sm font-medium">Before</label>
-                <input name="before-date" type="date" class="form-input rounded-xl mt-1 block w-full">
-              </div>
-            </li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-    <table 
-      id="document_table" 
-      class="table"
-    >
+    <table id="document_table" class="table">
       <!-- head -->
       <thead>
         <tr>
@@ -96,10 +117,10 @@
                 class="checkbox checkbox-xs"
                 _="
                 on click
-                set .checkbox.checked to my.checked
+                  set .checkbox.checked to my.checked
                 end
                 on change 
-                call checkCheckboxes()
+                  call checkCheckboxes()
                 end
                 "/>
             </label>
@@ -122,7 +143,7 @@
                 value="{{ document.pk }}"
                 _="
                 on change
-                call checkCheckboxes()
+                  call checkCheckboxes()
                 end
                 "/>
             </label>

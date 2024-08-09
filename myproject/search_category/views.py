@@ -46,6 +46,7 @@ def search_category(request):
         return HttpResponseNotAllowed(permitted_methods=["POST"])
 
 
+# TODO: Convert to a reusable component
 def active_search(request):
     if request.method == "POST":
         if not request.user.is_anonymous and request.user.has_verified_email:
