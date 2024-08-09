@@ -30,15 +30,14 @@ def my_docs(request):
         user = request.user
         documents = Document.objects.filter(user=user).all().order_by("date_uploaded")
         transaction_types = (
-            documents.values_list("transaction_type__name", flat=True)
+            documents.values("transaction_type__pk", "transaction_type__name")
             .distinct()
             .order_by("transaction_type__name")
         )
+        print(transaction_types)
 
         banks = (
-            documents.values_list("bank__name", flat=True)
-            .distinct()
-            .order_by("bank__name")
+            documents.values("bank__pk", "bank__name").distinct().order_by("bank__name")
         )
 
         if request.method == "GET":
@@ -75,6 +74,7 @@ def my_docs(request):
 
 
 # TODO: Convert to reusable component
+# TODO: Move it to active_search component
 def my_docs_pagination_view(request):
     if request.method == "POST":
         if not request.user.is_anonymous and request.user.has_verified_email:

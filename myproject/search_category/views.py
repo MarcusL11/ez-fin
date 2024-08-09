@@ -7,8 +7,8 @@ from django.shortcuts import render
 from django.utils.html import escape
 import re
 from upload_doc.models import ExpenseCategory
-from django.apps import apps
 from django.core.paginator import Paginator
+from upload_doc.models import Document
 
 
 def search_category(request):
@@ -46,42 +46,34 @@ def search_category(request):
         return HttpResponseNotAllowed(permitted_methods=["POST"])
 
 
-# TODO: Convert to a reusable component
 def active_search(request):
     if request.method == "POST":
         if not request.user.is_anonymous and request.user.has_verified_email:
             user = request.user
-            app_name = request.POST.get("app_name")
-            model_name = request.POST.get("model_name")
             search_content = request.POST.get("search_content", "").strip()
+            transaction_type_filter = request.POST.get("transaction_type_filter", "")
 
-            if not app_name or not model_name:
-                return HttpResponseBadRequest("Missing required parameters.")
+            print("Transaction_Type:", transaction_type_filter)
 
-            try:
-                ModelClass = apps.get_model(app_name, model_name)
-            except LookupError:
-                return HttpResponseBadRequest("Invalid app name or model name.")
+            documents = (
+                Document.objects.filter(user=user)
+                .select_related("bank", "transaction_type")
+                .order_by("name")
+            )
 
             # Check if the search_content is empty
             if search_content:
                 sanitized_content = escape(search_content)
                 sanitized_content = re.sub(r"[^a-zA-Z0-9 ]", "", sanitized_content)
-                documents = (
-                    ModelClass.objects.filter(
-                        name__icontains=sanitized_content,
-                        user=user,
-                    )
-                    .select_related("bank", "transaction_type")
-                    .order_by("name")
+                documents = documents.objects.filter(
+                    name__icontains=sanitized_content,
                 )
-            else:
-                # If search content is empty, return all documents for the user
-                documents = (
-                    ModelClass.objects.filter(user=user)
-                    .select_related("bank", "transaction_type")
-                    .order_by("name")
+
+            if transaction_type_filter:
+                documents = documents.filter(
+                    transaction_type__pk=transaction_type_filter
                 )
+
             paginator = Paginator(documents, 10)
             page_number = request.GET.get("page", 1)
             page_obj = paginator.get_page(page_number)
